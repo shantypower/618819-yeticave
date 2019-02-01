@@ -29,6 +29,7 @@ $user_name = 'shantypower';
             <?php if ($is_auth): ?>
             <div class="user-menu__logged">
                 <p><?=$user_name;?></p>
+            </div>
                 <? else:?>
                 <ul class="user-menu__list">
                     <li class="user-menu__item">
@@ -38,8 +39,7 @@ $user_name = 'shantypower';
                         <a href="#">Вход</a>
                     </li>
                 </ul>
-        <?php endif; ?>
-  </div>
+            <?php endif; ?>
         </nav>
     </div>
 </header>
