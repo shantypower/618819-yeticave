@@ -14,12 +14,7 @@ $adverts =
 
 function price_format($price) {
     $price = ceil($price);
-    if ($price > 1000) {
-        $price = number_format($price, 0, ' ', ' ');
-        return $price;
-    } else {
-        return $price;
-    }
+    return $price = number_format($price, 0, ' ', ' ');
 }
 ?>
 <!DOCTYPE html>
