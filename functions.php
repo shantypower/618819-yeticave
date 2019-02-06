@@ -20,4 +20,13 @@ function include_template($name, $data) {
 
     return $result;
 }
+
+function text_clean($str) {
+    $text = trim($str);
+	$text = htmlspecialchars($str);
+	$text = strip_tags($str);
+
+	return $text;
+}
+
 ?>
