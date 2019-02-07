@@ -1,10 +1,12 @@
 <?php
-function price_format($price) {
+function price_format($price)
+{
     $price = ceil($price);
     return $price = number_format($price, 0, ' ', ' ');
 }
 
-function include_template($name, $data) {
+function include_template($name, $data)
+{
     $name = 'templates/' . $name;
     $result = '';
 
@@ -21,12 +23,11 @@ function include_template($name, $data) {
     return $result;
 }
 
-function text_clean($str) {
+function text_clean($str)
+{
     $text = trim($str);
-	$text = htmlspecialchars($str);
-	$text = strip_tags($str);
+    $text = htmlspecialchars($text);
+    $text = strip_tags($text);
 
-	return $text;
+    return $text;
 }
-
-?>

@@ -11,4 +11,3 @@ $adverts =
     ['name' => 'Куртка для сноуборда DC Mutiny Charocal', 'category' => 'Одежда', 'price' => '7500', 'img' => 'img/lot-5.jpg'],
     ['name' => 'Маска Oakley Canopy', 'category' => 'Разное', 'price' => '5400', 'img' => 'img/lot-6.jpg']
 ];
-?>

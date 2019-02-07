@@ -7,11 +7,10 @@ $page_content = include_template('index.php', [
     'categories' => $categories
 ]);
 $layout_content = include_template('layout.php', [
-	'content' => $page_content,
+    'content' => $page_content,
     'categories' => $categories,
     'is_auth' => $is_auth,
     'user_name' => $user_name,
-	'title' => 'YetiCave - Главная страница'
+    'title' => 'YetiCave - Главная страница'
 ]);
 print($layout_content);
-?>
