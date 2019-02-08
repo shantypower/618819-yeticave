@@ -27,9 +27,7 @@
                         <span class="lot__amount"><?=price_format(text_clean($item['price'])).' &#8381;'?></span>
                         <span class="lot__cost"><?=price_format(text_clean($item['price']))?><b class="rub">р</b></span>
                     </div>
-                    <div class="lot__timer timer"><?=lot_lifetime()?>
-                        12:23
-                    </div>
+                    <div class="lot__timer timer"><?=lot_lifetime()?></div>
                 </div>
             </div>
         </li>
