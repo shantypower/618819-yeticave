@@ -31,3 +31,12 @@ function text_clean($str)
 
     return $text;
 }
+
+function lot_lifetime()
+{
+    date_default_timezone_set('Asia/Chita');
+    $future_time = date_create('midnight tomorrow');
+    $current_time = date_create('now');
+    $diff = date_diff($current_time, $future_time);
+    return date_interval_format($diff, "%H:%i:%s");
+}
