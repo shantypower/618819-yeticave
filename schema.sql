@@ -17,7 +17,7 @@ CREATE TABLE lots (
   date_end TIMESTAMP NOT NULL,
   price_step INT NOT NULL,
   author_id INT,
-  vinner_id INT,
+  winner_id INT,
   cat_id INT,
   FULLTEXT KEY lot_search (lot_name, descr)
 );

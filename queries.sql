@@ -57,9 +57,9 @@ VALUES ('2019-01-26 15:00:00', '6500', '2', '6');
 SELECT * FROM categories;
 
 /*получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории*/
-SELECT lot_name, start_price, img_src, cat_id FROM lots WHERE date_end > CURRENT_DATE() ORDER BY date_add DESC LIMIT 3;
+SELECT l.lot_name, l.start_price, l.img_src, c.cat_name FROM lots l JOIN categories c ON l.cat_id = c.id WHERE date_end > CURRENT_DATE() ORDER BY date_add DESC LIMIT 3;
 /*показать лот по его id. Получите также название категории, к которой принадлежит лот*/
-SELECT lots.*, categories.cat_name FROM lots JOIN categories ON lots.cat_id = categories.id WHERE lots.id = 3;
+SELECT l.*, c.cat_name FROM lots l JOIN categories c ON l.cat_id = c.id WHERE l.id = 3;
 /*обновить название лота по его идентификатору*/
 UPDATE lots SET lot_name = 'Брюки для сноуборда RIDE Charocal/LIME' WHERE id = 5;
 /*получить список самых свежих ставок для лота по его идентификатору*/
