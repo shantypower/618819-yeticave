@@ -36,7 +36,7 @@ CREATE TABLE users (
   user_name CHAR(200) NOT NULL,
   user_pass CHAR(200) NOT NULL,
   avatar_src TEXT,
-  contacts CHAR 
+  contacts CHAR(250)
 );
 ALTER TABLE lots
 ADD FOREIGN KEY (author_id) REFERENCES users(id);
