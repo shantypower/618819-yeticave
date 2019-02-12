@@ -17,7 +17,7 @@ CREATE TABLE lots (
   date_end TIMESTAMP NOT NULL,
   price_step INT NOT NULL,
   author_id INT,
-  vinner_id INT,
+  winner_id INT,
   cat_id INT,
   FULLTEXT KEY lot_search (lot_name, descr)
 );
@@ -36,16 +36,16 @@ CREATE TABLE users (
   user_name CHAR(200) NOT NULL,
   user_pass CHAR(200) NOT NULL,
   avatar_src TEXT,
-  contacts CHAR 
+  contacts CHAR(250)
 );
 ALTER TABLE lots
 ADD FOREIGN KEY (author_id) REFERENCES users(id);
 ALTER TABLE lots
-ADD FOREIGN KEY (vinner_id) REFERENCES users(id);
+ADD FOREIGN KEY (winner_id) REFERENCES users(id);
 ALTER TABLE lots
 ADD FOREIGN KEY (cat_id) REFERENCES categories(id);
 ALTER TABLE lot_rates
 ADD FOREIGN KEY (user_id) REFERENCES users(id);
 ALTER TABLE lot_rates
 ADD FOREIGN KEY (lot_id) REFERENCES lots(id);
-CREATE INDEX vinner_lot ON lots (date_end, vinner_id);
+CREATE INDEX winner_lot ON lots (date_end, winner_id);
