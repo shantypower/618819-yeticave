@@ -1,7 +1,13 @@
 <?php
 $is_auth = rand(0, 1);
 $user_name = 'shantypower';
-$categories = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
+$db = [
+    'host' => 'localhost',
+    'user' => 'root',
+    'password' => '',
+    'database' => 'yeticave'
+];
+
 $adverts =
 [
     ['name' => '2014 Rossignol District Snowboard', 'category' => 'Доски и лыжи', 'price' => '10999', 'img' => 'img/lot-1.jpg'],
