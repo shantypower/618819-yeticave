@@ -19,12 +19,10 @@ if (!$link) {
     $result = mysqli_query($link, $sql);
     if ($result) {
         $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
- /*        $page_content = include_template('index.php', [
-            'categories' => $categories
-        ]); */
+        $error_flag1 = 'index';
     } else {
         $error = mysqli_error($link);
-        $page_content = include_template('error.php', ['error' => $error]);
+        $error_flag1 = 'error';
     }
     // запрос на показ девяти самых последних лотов
     $sql = 'SELECT l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
@@ -40,13 +38,22 @@ if (!$link) {
     $result = mysqli_query($link, $sql);
     if ($result) {
         $adverts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $page_content = include_template('index.php', [
-            'categories' => $categories,
-            'adverts' => $adverts
-        ]);
+        $error_flag2 = 'index';
     } else {
         $error = mysqli_error($link);
-        $page_content = include_template('error.php', ['error' => $error]);
+        $error_flag2 = 'error';
+    }
+
+    if ($error_flag1 == 'error' || $error_flag2 == 'error') {
+        $page_content = include_template('error.php', [
+            'error' => $error
+    ]);
+    }
+    if ($error_flag1 == 'index' && $error_flag2 == 'index') {
+    $page_content = include_template('index.php', [
+        'categories' => $categories,
+        'adverts' => $adverts,
+    ]);
     }
 }
 
