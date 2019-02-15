@@ -1,13 +1,14 @@
 <?php
 date_default_timezone_set('Asia/Chita');
 require_once('functions.php');
+require_once('mysql_helper.php');
 require_once('data.php');
 
-$link = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
+$link = mysqli_init();
+mysqli_options($link, MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
+mysqli_real_connect($link, $db['host'], $db['user'], $db['password'], $db['database']);
 mysqli_set_charset($link, "utf8");
 
-$categories = [];
-$adverts = [];
 $page_content = '';
 
 if (!$link) {
@@ -16,12 +17,11 @@ if (!$link) {
 } else {
        // Запрос на получение списка категорий
     $sql = 'SELECT cat_name, css_cl FROM categories';
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $categories = db_fetch_data($link, $sql, $categories = []);
+    if ($categories) {
         $error_flag1 = 'index';
     } else {
-        $error = mysqli_error($link);
+        $error1 = mysqli_error($link);
         $error_flag1 = 'error';
     }
     // запрос на показ девяти самых последних лотов
@@ -35,25 +35,24 @@ if (!$link) {
    GROUP BY lr.lot_id
    ORDER BY l.date_add
     DESC LIMIT 6;';
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $adverts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $adverts = db_fetch_data($link, $sql, $adverts = []);
+    if ($adverts) {
         $error_flag2 = 'index';
     } else {
-        $error = mysqli_error($link);
+        $error2 = mysqli_error($link);
         $error_flag2 = 'error';
     }
 
     if ($error_flag1 == 'error' || $error_flag2 == 'error') {
         $page_content = include_template('error.php', [
-            'error' => $error
-    ]);
+            'error' => $error1.'<br>'.$error2
+        ]);
     }
     if ($error_flag1 == 'index' && $error_flag2 == 'index') {
-    $page_content = include_template('index.php', [
-        'categories' => $categories,
-        'adverts' => $adverts,
-    ]);
+        $page_content = include_template('index.php', [
+            'categories' => $categories,
+            'adverts' => $adverts,
+        ]);
     }
 }
 
