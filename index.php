@@ -54,6 +54,10 @@ if (!$link) {
             'adverts' => $adverts,
         ]);
     }
+    $page_content = include_template('index.php', [
+        'categories' => $categories,
+        'adverts' => $adverts
+    ]);
 }
 
 $layout_content = include_template('layout.php', [
