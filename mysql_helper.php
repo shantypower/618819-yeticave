@@ -10,6 +10,7 @@
  * @return mysqli_stmt Подготовленное выражение
  */
 function db_get_prepare_stmt($link, $sql, $data = []) {
+    //var_dump($link); die;
     $stmt = mysqli_prepare($link, $sql);
 
     if ($data) {
