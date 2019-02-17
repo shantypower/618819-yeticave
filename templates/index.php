@@ -10,11 +10,13 @@
         <?php endforeach?>
     </ul>
 </section>
+
 <?php if ($error):?>
 <section class="lot-item container">
-    <h2><?=$error;?></h2>
+    <h2><?='Ошибка: '.$error;?></h2>
 </section>
 <?php endif;?>
+
 <section class="lots">
     <div class="lots__header">
         <h2>Открытые лоты</h2>

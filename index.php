@@ -4,14 +4,22 @@ require('data.php');
 require('functions.php');
 require_once('db_connection.php');
 $page_content = '';
-if (!$link) {
-    $error = mysqli_connect_error();
-    $page_content = include_template('error.php', ['error' => $error]);
+if ($isConnect == false) {
+    $error[] = mysqli_connect_error();
+    $page_content = include_template('index.php', ['error' => $error]);
 } else {
-    $errors = [];
     $categories = getAllCategories($link);
-    $errors[] = catchError($categories, $link);
+    if (count($categories) == 0) {
+        $error = mysqli_error($link);
+        $page_content = include_template('index.php', ['error' => $error]);
+        return;
+    };
     $adverts = getAllLots($link);
-    $errors[] = catchError($adverts, $link);
-    print(showContent($errors, $categories, $adverts));
+    if (count($adverts) == 0) {
+        $error = mysqli_error($link);
+        $page_content = include_template('index.php', ['error' => $error]);
+        return;
+    };
+    print(showContent($categories, $adverts));
 }
+

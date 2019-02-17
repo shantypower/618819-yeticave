@@ -43,7 +43,7 @@ function lot_lifetime()
 
 function getAllCategories($link)
 {
-    $sql = 'SELECT cat_name1, css_cl FROM categories';
+    $sql = 'SELECT cat_name, css_cl FROM categories';
     $categories = db_fetch_data($link, $sql, $categories = []);
     return $categories;
 }
@@ -74,24 +74,16 @@ function catchError($array, $link)
     return $message;
 }
 
-function showContent($array, $content1, $content2)
+function showContent($categories, $adverts)
 {
+    $page_content = include_template('index.php', [
+        'categories' => $categories,
+        'adverts' => $adverts
+    ]);
 
-    if (implode($array) !== '') {
-        $page_content = include_template('index.php', [
-            'error' => 'Ошибка: '.implode('; ', $array),
-            'categories' => $content1,
-            'adverts' => $content2
-            ]);
-    } else {
-        $page_content = include_template('index.php', [
-            'categories' => $content1,
-            'adverts' => $content2
-        ]);
-    }
     $show_page = include_template('layout.php', [
         'content' => $page_content,
-        'categories' => $content1,
+        'categories' => $categories,
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'title' => 'YetiCave - Главная страница'
