@@ -43,7 +43,7 @@ function lot_lifetime()
 
 function getAllCategories($link)
 {
-    $sql = 'SELECT cat_name, css_cl FROM categories';
+    $sql = 'SELECT cat_name1, css_cl FROM categories';
     $categories = db_fetch_data($link, $sql, $categories = []);
     return $categories;
 }
@@ -64,44 +64,37 @@ function getAllLots($link)
     return $adverts;
 }
 
-function dataOutput($categories, $adverts, $link)
+function catchError($array, $link)
 {
-    if ($categories) {
-        $error_flag1 = 'index';
+    if (!$array) {
+        $message = mysqli_error($link);
     } else {
-        $error1 = mysqli_error($link);
-        $error_flag1 = 'error';
+        $message = '';
     }
+    return $message;
+}
 
-    if ($adverts) {
-        $error_flag2 = 'index';
-    } else {
-        $error2 = mysqli_error($link);
-        $error_flag2 = 'error';
-    }
+function showContent($array, $content1, $content2)
+{
 
-    if ($error_flag1 == 'error' || $error_flag2 == 'error') {
-        $page_content = include_template('error.php', [
-            'error' => $error1.'<br>'.$error2
-        ]);
-    }
-    if ($error_flag1 == 'index' && $error_flag2 == 'index') {
+    if (implode($array) !== '') {
         $page_content = include_template('index.php', [
-            'categories' => $categories,
-            'adverts' => $adverts,
+            'error' => 'Ошибка: '.implode('; ', $array),
+            'categories' => $content1,
+            'adverts' => $content2
+            ]);
+    } else {
+        $page_content = include_template('index.php', [
+            'categories' => $content1,
+            'adverts' => $content2
         ]);
     }
-    $page_content = include_template('index.php', [
-        'categories' => $categories,
-        'adverts' => $adverts
-    ]);
-
-    $layout_content = include_template('layout.php', [
+    $show_page = include_template('layout.php', [
         'content' => $page_content,
-        'categories' => $categories,
+        'categories' => $content1,
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'title' => 'YetiCave - Главная страница'
     ]);
-    return $layout_content;
+    return $show_page;
 }

@@ -8,7 +8,10 @@ if (!$link) {
     $error = mysqli_connect_error();
     $page_content = include_template('error.php', ['error' => $error]);
 } else {
+    $errors = [];
     $categories = getAllCategories($link);
+    $errors[] = catchError($categories, $link);
     $adverts = getAllLots($link);
-    print(dataOutput($categories, $adverts, $link));
+    $errors[] = catchError($adverts, $link);
+    print(showContent($errors, $categories, $adverts));
 }
