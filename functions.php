@@ -50,7 +50,7 @@ function getAllCategories($link)
 
 function getAllLots($link)
 {
-    $sql = 'SELECT l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
+    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
     FROM lots l
     JOIN categories c
       ON l.cat_id = c.id
@@ -76,7 +76,7 @@ function showError($error)
     print($show_page);
 }
 
-function showContent($categories, $adverts)
+function showContent($categories, $adverts, $is_auth, $user_name)
 {
     $page_content = include_template('index.php', [
         'categories' => $categories,

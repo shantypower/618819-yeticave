@@ -21,6 +21,4 @@ if (count($adverts) == 0) {
     showError($error);
     return;
 };
-print(showContent($categories, $adverts));
-
-
+print(showContent($categories, $adverts, $is_auth, $user_name));
