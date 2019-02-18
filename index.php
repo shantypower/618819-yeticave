@@ -2,7 +2,7 @@
 date_default_timezone_set('Asia/Chita');
 require('data.php');
 require('functions.php');
-require_once('db_connection.php');
+require('db_connection.php');
 $page_content = '';
 if ($isConnect == false) {
     $error = mysqli_connect_error();
@@ -21,4 +21,8 @@ if (count($adverts) == 0) {
     showError($error, $is_auth, $user_name);
     return;
 };
-print(showContent($categories, $adverts, $is_auth, $user_name));
+$page_content = include_template('index.php', [
+    'categories' => $categories,
+    'adverts' => $adverts
+]);
+print(showContent($categories, $page_content, $is_auth, $user_name));

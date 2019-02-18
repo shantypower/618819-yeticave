@@ -64,31 +64,14 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showError($error, $is_auth, $user_name)
+function showContent($categories, $page_content, $is_auth, $user_name)
 {
-    $page_content = include_template('error.php', ['error' => $error]);
     $show_page = include_template('layout.php', [
         'content' => $page_content,
+        'categories' => $categories,
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'title' => 'YetiCave - Главная страница'
     ]);
     print($show_page);
-}
-
-function showContent($categories, $adverts, $is_auth, $user_name)
-{
-    $page_content = include_template('index.php', [
-        'categories' => $categories,
-        'adverts' => $adverts
-    ]);
-
-    $show_page = include_template('layout.php', [
-        'content' => $page_content,
-        'categories' => $categories,
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'title' => 'YetiCave - Главная страница'
-    ]);
-    return $show_page;
 }
