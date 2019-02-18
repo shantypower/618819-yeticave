@@ -24,17 +24,17 @@ VALUES ('2018-08-20 22:44:00', 'Gosha', 'gosha@mail.ru', 'qwerty', 'https://klyk
 
 /*Добавляем список объявлений*/
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-01-20 21:00:00', '2014 Rossignol District Snowboard', 'Немного б/у', 'img/lot-1.jpg', '10999', '2019-01-30 21:00:00', '1000', '1', '1');
+VALUES ('2019-02-14 21:00:00', '2014 Rossignol District Snowboard', 'Немного б/у', 'img/lot-1.jpg', '10999', '2019-02-28 21:00:00', '1000', '1', '1');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
 VALUES ('2019-01-21 21:00:00', 'DC Ply Mens 2016/2017 Snowboard', 'Графитовый скользяк, кант не сточен', 'img/lot-2.jpg', '159999', '2019-02-26 21:00:00', '1000', '2', '1');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
 VALUES ('2019-01-22 21:00:00', 'Крепления Union Contact Pro 2015 года размер L/XL', 'Стрепы работают отлично', 'img/lot-3.jpg', '8000', '2019-02-18 21:00:00', '500', '2', '2');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-01-23 21:00:00', 'Ботинки для сноуборда DC Mutiny Charocal', 'Новые', 'img/lot-4.jpg', '10999', '2019-01-25 21:00:00', '10999', '1', '3');
+VALUES ('2019-01-23 21:00:00', 'Ботинки для сноуборда DC Mutiny Charocal', 'Новые', 'img/lot-4.jpg', '10999', '2019-02-25 21:00:00', '10999', '1', '3');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
 VALUES ('2019-02-02 21:00:00', 'Куртка для сноуборда DC Mutiny Charocal', 'В идеальном состоянии', 'img/lot-5.jpg', '7500', '2019-03-15 21:00:00', '800', '1', '4');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-01-25 21:00:00', 'Маска Oakley Canopy', 'Есть царапины, не мешают обзору', 'img/lot-6.jpg', '5400', '2019-02-04 21:00:00', '500', '3', '6');
+VALUES ('2019-01-25 21:00:00', 'Маска Oakley Canopy', 'Есть царапины, не мешают обзору', 'img/lot-6.jpg', '5400', '2019-02-24 21:00:00', '500', '3', '6');
 
 /*Добаляем ставки для объявления*/
 INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
@@ -43,6 +43,12 @@ INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
 VALUES ('2019-01-26 15:00:00', '6500', '2', '6');
 INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
 VALUES ('2019-02-11 16:00:00', '8300', '1', '5');
+INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
+VALUES ('2019-02-15 16:00:00', '10000', '1', '1');
+INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
+VALUES ('2019-02-14 15:00:00', '16500', '2', '2');
+INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
+VALUES ('2019-02-11 16:00:00', '18300', '1', '3');
 
 /*ЗАПРОСЫ ДЛЯ ВЫБОРКИ из БД*/
 

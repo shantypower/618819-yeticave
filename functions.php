@@ -1,4 +1,5 @@
 <?php
+require_once('mysql_helper.php');
 function price_format($price)
 {
     $price = ceil($price);
@@ -38,4 +39,56 @@ function lot_lifetime()
     $current_time = date_create('now');
     $diff = date_diff($current_time, $future_time);
     return date_interval_format($diff, "%H:%i");
+}
+
+function getAllCategories($link)
+{
+    $sql = 'SELECT cat_name, css_cl FROM categories';
+    $categories = db_fetch_data($link, $sql, $categories = []);
+    return $categories;
+}
+
+function getAllLots($link)
+{
+    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
+    FROM lots l
+    JOIN categories c
+      ON l.cat_id = c.id
+    JOIN lot_rates lr
+      ON l.id = lr.lot_id
+   WHERE l.date_end > CURRENT_DATE()
+   GROUP BY lr.lot_id
+   ORDER BY l.date_add
+    DESC LIMIT 6;';
+    $adverts = db_fetch_data($link, $sql, $adverts = []);
+    return $adverts;
+}
+
+function showError($error, $is_auth, $user_name)
+{
+    $page_content = include_template('error.php', ['error' => $error]);
+    $show_page = include_template('layout.php', [
+        'content' => $page_content,
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => 'YetiCave - Главная страница'
+    ]);
+    print($show_page);
+}
+
+function showContent($categories, $adverts, $is_auth, $user_name)
+{
+    $page_content = include_template('index.php', [
+        'categories' => $categories,
+        'adverts' => $adverts
+    ]);
+
+    $show_page = include_template('layout.php', [
+        'content' => $page_content,
+        'categories' => $categories,
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => 'YetiCave - Главная страница'
+    ]);
+    return $show_page;
 }
