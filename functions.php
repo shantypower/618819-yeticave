@@ -64,14 +64,16 @@ function getAllLots($link)
     return $adverts;
 }
 
-function catchError($array, $link)
+function showError($error)
 {
-    if (!$array) {
-        $message = mysqli_error($link);
-    } else {
-        $message = '';
-    }
-    return $message;
+    $page_content = include_template('error.php', ['error' => $error]);
+    $show_page = include_template('layout.php', [
+        'content' => $page_content,
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'title' => 'YetiCave - Главная страница'
+    ]);
+    print($show_page);
 }
 
 function showContent($categories, $adverts)
