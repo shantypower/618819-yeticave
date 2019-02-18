@@ -18,7 +18,7 @@ if (count($categories) == 0) {
 $adverts = getAllLots($link);
 if (count($adverts) == 0) {
     $error = mysqli_error($link);
-    showError($error);
+    showError($error, $is_auth, $user_name);
     return;
 };
 print(showContent($categories, $adverts, $is_auth, $user_name));
