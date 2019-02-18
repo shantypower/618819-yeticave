@@ -64,7 +64,7 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showError($error)
+function showError($error, $is_auth, $user_name)
 {
     $page_content = include_template('error.php', ['error' => $error]);
     $show_page = include_template('layout.php', [

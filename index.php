@@ -6,13 +6,13 @@ require_once('db_connection.php');
 $page_content = '';
 if ($isConnect == false) {
     $error = mysqli_connect_error();
-    showError($error);
+    showError($error, $is_auth, $user_name);
     return;
 }
 $categories = getAllCategories($link);
 if (count($categories) == 0) {
     $error = mysqli_error($link);
-    showError($error);
+    showError($error, $is_auth, $user_name);
     return;
 };
 $adverts = getAllLots($link);
