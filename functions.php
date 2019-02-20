@@ -86,23 +86,23 @@ function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
                 ON l.id = lr.lot_id
              WHERE l.id  = ? GROUP BY lr.lot_id";
 
-$stmt = db_get_prepare_stmt($link, $sql, [$id]);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-if (!$result) {
-    $error = mysqli_error($link);
-    $page_content = include_template('error.php', ['error' => $error]);
+    if (!$result) {
+        $error = mysqli_error($link);
+        $page_content = include_template('error.php', ['error' => $error]);
+        return showContent($categories, $page_content, $is_auth, $user_name);
+    }
+
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($result) == 0) {
+        http_response_code(404);
+        $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
+        return showContent($categories, $page_content, $is_auth, $user_name);
+    }
+    $page_content = include_template('lot.php', ['lot' => $result[0]]);
     return showContent($categories, $page_content, $is_auth, $user_name);
-}
-
-$result = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-if (count($result) == 0) {
-    http_response_code(404);
-    $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    return showContent($categories, $page_content, $is_auth, $user_name);
-}
-$page_content = include_template('lot.php', ['lot' => $result[0]]);
-return showContent($categories, $page_content, $is_auth, $user_name);
 }
