@@ -20,6 +20,7 @@ if (count($categories) == 0) {
     return;
 };
 $adverts = getAllLots($link);
+var_dump($adverts);
 if (count($adverts) == 0) {
     $error = mysqli_error($link);
     $page_content = include_template('error.php', ['error' => $error]);
