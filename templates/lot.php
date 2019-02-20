@@ -17,7 +17,7 @@
             <span class="lot-item__cost"><?=text_clean($lot['MAX(lr.rate)'])?></span>
             </div>
             <div class="lot-item__min-cost">
-            Мин. ставка <span><?=text_clean($lot['MIN(lr.rate)'])?></span>
+            Мин. ставка <span><?=text_clean($lot['MAX(lr.rate)'] + $lot['price_step'])?></span>
             </div>
         </div>
         </div>
