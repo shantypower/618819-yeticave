@@ -64,25 +64,8 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showError($error, $is_auth, $user_name)
+function showContent($categories, $page_content, $is_auth, $user_name)
 {
-    $page_content = include_template('error.php', ['error' => $error]);
-    $show_page = include_template('layout.php', [
-        'content' => $page_content,
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'title' => 'YetiCave - Главная страница'
-    ]);
-    print($show_page);
-}
-
-function showContent($categories, $adverts, $is_auth, $user_name)
-{
-    $page_content = include_template('index.php', [
-        'categories' => $categories,
-        'adverts' => $adverts
-    ]);
-
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
@@ -91,4 +74,35 @@ function showContent($categories, $adverts, $is_auth, $user_name)
         'title' => 'YetiCave - Главная страница'
     ]);
     return $show_page;
+}
+
+function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
+              FROM lots l
+              JOIN categories c
+                ON l.cat_id = c.id
+              JOIN lot_rates lr
+                ON l.id = lr.lot_id
+             WHERE l.id  = ? GROUP BY lr.lot_id";
+
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        $error = mysqli_error($link);
+        $page_content = include_template('error.php', ['error' => $error]);
+        return showContent($categories, $page_content, $is_auth, $user_name);
+    }
+
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if (count($result) == 0) {
+        http_response_code(404);
+        $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
+        return showContent($categories, $page_content, $is_auth, $user_name);
+    }
+    $page_content = include_template('lot.php', ['lot' => $result[0]]);
+    return showContent($categories, $page_content, $is_auth, $user_name);
 }
