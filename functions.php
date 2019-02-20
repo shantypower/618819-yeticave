@@ -73,5 +73,35 @@ function showContent($categories, $page_content, $is_auth, $user_name)
         'user_name' => $user_name,
         'title' => 'YetiCave - Главная страница'
     ]);
-    print($show_page);
+    return $show_page;
+}
+
+function getLotById($id, $categories, $is_auth, $user_name, $link)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), MIN(lr.rate), c.cat_name
+              FROM lots l
+              JOIN categories c
+                ON l.cat_id = c.id
+              JOIN lot_rates lr
+                ON l.id = lr.lot_id
+             WHERE l.id  = '%s' GROUP BY lr.lot_id";
+
+$sql = sprintf($sql, $id);
+
+$result = db_fetch_data($link, $sql, $id = []);
+$res = mysqli_query($link, $sql);
+$res = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+    if ($result == $res) {
+        if (count($result) == 0) {
+            http_response_code(404);
+            $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
+            return showContent($categories, $page_content, $is_auth, $user_name);
+        }
+        $page_content = include_template('lot.php', ['lot' => $result[0]]);
+        return showContent($categories, $page_content, $is_auth, $user_name);
+    }
+    $error = mysqli_error($link);
+    $page_content = include_template('error.php', ['error' => $error]);
+    return showContent($categories, $page_content, $is_auth, $user_name);
 }
