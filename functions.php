@@ -76,7 +76,7 @@ function showContent($categories, $page_content, $is_auth, $user_name)
     return $show_page;
 }
 
-function getLotById($id, $categories, $is_auth, $user_name, $link)
+function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
               FROM lots l
@@ -84,24 +84,20 @@ function getLotById($id, $categories, $is_auth, $user_name, $link)
                 ON l.cat_id = c.id
               JOIN lot_rates lr
                 ON l.id = lr.lot_id
-             WHERE l.id  = '%s' GROUP BY lr.lot_id";
+             WHERE l.id  = '?' GROUP BY lr.lot_id";
 
-$sql = sprintf($sql, $id);
-
-$result = db_fetch_data($link, $sql, $id = []);
-$res = mysqli_query($link, $sql);
-$res = mysqli_fetch_all($res, MYSQLI_ASSOC);
-
-    if ($result !== $res) {
-        $error = mysqli_error($link);
-        $page_content = include_template('error.php', ['error' => $error]);
-        return showContent($categories, $page_content, $is_auth, $user_name);
-    }
-    if (count($result) == 0) {
+$stmt = db_get_prepare_stmt($link, $sql, [$id]);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+foreach ($adverts as $item) {
+    $id = ($id == $item['id']) ? $id : '';
+}
+    if ($id = '') {
         http_response_code(404);
         $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
         return showContent($categories, $page_content, $is_auth, $user_name);
     }
-    $page_content = include_template('lot.php', ['lot' => $result[0]]);
+    $page_content = include_template('lot.php', ['lot' => $result]);
     return showContent($categories, $page_content, $is_auth, $user_name);
 }

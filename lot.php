@@ -5,6 +5,7 @@ require('db_connection.php');
 require_once('functions.php');
 $page_content = '';
 $categories = getAllCategories($link);
+$adverts = getAllLots($link);
 $lot = '';
 $id = (int)$_GET['id'];
-print(getLotById($id, $categories, $is_auth, $user_name, $link));
+print(getLotById($id, $categories, $adverts, $is_auth, $user_name, $link));
