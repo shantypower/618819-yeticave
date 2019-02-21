@@ -43,7 +43,7 @@ function lot_lifetime()
 
 function getAllCategories($link)
 {
-    $sql = 'SELECT cat_name, css_cl FROM categories';
+    $sql = 'SELECT id, cat_name, css_cl FROM categories';
     $categories = db_fetch_data($link, $sql, $categories = []);
     return $categories;
 }
