@@ -41,6 +41,14 @@ function lot_lifetime()
     return date_interval_format($diff, "%H:%i");
 }
 
+function check_remaintime($date) {
+    $seconds = strtotime($date);
+    $seconds_passed = $seconds - strtotime('now');
+    $days = floor($seconds_passed / 86400);
+    if ($days > 0) return true;
+    return false;
+}
+
 function getAllCategories($link)
 {
     $sql = 'SELECT id, cat_name, css_cl FROM categories';
