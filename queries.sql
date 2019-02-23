@@ -56,16 +56,16 @@ VALUES ('2019-02-11 16:00:00', '18300', '1', '3');
 SELECT * FROM categories;
 
 /*получить самые новые, открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории*/
-SELECT l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
+SELECT l.id, l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
   FROM lots l
   JOIN categories c
     ON l.cat_id = c.id
-  JOIN lot_rates lr
+  LEFT OUTER JOIN lot_rates lr
     ON l.id = lr.lot_id
  WHERE l.date_end > CURRENT_DATE()
- GROUP BY lr.lot_id
+ GROUP BY l.id, l.lot_name, l.start_price, l.img_src, l.cat_id
  ORDER BY l.date_add
-  DESC LIMIT 3;
+  DESC LIMIT 6;
 
 /*показать лот по его id. Получите также название категории, к которой принадлежит лот*/
 SELECT l.*, c.cat_name
@@ -73,6 +73,15 @@ SELECT l.*, c.cat_name
   JOIN categories c
     ON l.cat_id = c.id
  WHERE l.id = 3;
+
+/**/
+SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
+  FROM lots l
+  JOIN categories c
+    ON l.cat_id = c.id
+  LEFT OUTER JOIN lot_rates lr
+    ON l.id = lr.lot_id
+ WHERE l.id  = ?;
 
 /*обновить название лота по его идентификатору*/
 UPDATE lots
