@@ -58,14 +58,14 @@ function getAllCategories($link)
 
 function getAllLots($link)
 {
-    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, MAX(lr.rate), c.cat_name
+    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, l.price_step, MAX(lr.rate), c.cat_name
     FROM lots l
     JOIN categories c
       ON l.cat_id = c.id
-    JOIN lot_rates lr
+    LEFT OUTER JOIN lot_rates lr
       ON l.id = lr.lot_id
    WHERE l.date_end > CURRENT_DATE()
-   GROUP BY lr.lot_id
+   GROUP BY l.id, l.lot_name, l.start_price, l.img_src, c.cat_name
    ORDER BY l.date_add
     DESC LIMIT 6;';
     $adverts = db_fetch_data($link, $sql, $adverts = []);
@@ -90,9 +90,9 @@ function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
               FROM lots l
               JOIN categories c
                 ON l.cat_id = c.id
-              JOIN lot_rates lr
+              LEFT OUTER JOIN lot_rates lr
                 ON l.id = lr.lot_id
-             WHERE l.id  = ? GROUP BY lr.lot_id";
+             WHERE l.id  = ? GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, c.cat_name";
 
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);

@@ -26,8 +26,8 @@
                 <h3 class="lot__title"><a class="text-link" href="/lot.php?id=<?=$item['id'];?>"><?=text_clean($item['lot_name'])?></a></h3>
                 <div class="lot__state">
                     <div class="lot__rate">
-                        <span class="lot__amount"><?=price_format(text_clean($item['start_price'])).' &#8381;'?></span>
-                        <span class="lot__cost"><?=price_format(text_clean($item['MAX(lr.rate)']))?><b class="rub">р</b></span>
+                        <span class="lot__amount"><?=price_format(text_clean($item['MAX(lr.rate)'] + $item['start_price'])).' &#8381;'?></span>
+                        <span class="lot__cost"><?=price_format(text_clean($item['MAX(lr.rate)'] + $item['start_price'] + $item['price_step']))?><b class="rub">р</b></span>
                     </div>
                     <div class="lot__timer timer"><?=lot_lifetime()?></div>
                 </div>

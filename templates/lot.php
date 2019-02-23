@@ -14,10 +14,10 @@
         <div class="lot-item__cost-state">
             <div class="lot-item__rate">
             <span class="lot-item__amount">Текущая цена</span>
-            <span class="lot-item__cost"><?=text_clean($lot['MAX(lr.rate)'])?></span>
+            <span class="lot-item__cost"><?=text_clean($lot['MAX(lr.rate)'] + $lot['start_price'])?></span>
             </div>
             <div class="lot-item__min-cost">
-            Мин. ставка <span><?=text_clean($lot['MAX(lr.rate)'] + $lot['price_step'])?></span>
+            Мин. ставка <span><?=text_clean($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])?></span>
             </div>
         </div>
         </div>
