@@ -72,20 +72,21 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showContent($categories, $page_content, $is_auth, $user_name)
+function showContent($categories, $page_content, $is_auth, $user_name, $title)
 {
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
         'is_auth' => $is_auth,
         'user_name' => $user_name,
-        'title' => 'YetiCave - Главная страница'
+        'title' => $title
     ]);
     return $show_page;
 }
 
 function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
 {
+    $page_content = [];
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
               FROM lots l
               JOIN categories c
@@ -101,7 +102,7 @@ function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
     if (!$result) {
         $error = mysqli_error($link);
         $page_content = include_template('error.php', ['error' => $error]);
-        return showContent($categories, $page_content, $is_auth, $user_name);
+        return showContent($categories, $page_content, $is_auth, $user_name, $error);
     }
 
     $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -109,8 +110,19 @@ function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
     if (count($result) == 0) {
         http_response_code(404);
         $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-        return showContent($categories, $page_content, $is_auth, $user_name);
+        return showContent($categories, $page_content, $is_auth, $user_name, '404 Страница не найдена');
     }
-    $page_content = include_template('lot.php', ['lot' => $result[0]]);
-    return showContent($categories, $page_content, $is_auth, $user_name);
+    $top_menu = include_template('menu.php', ['menu' => $categories]);
+    $page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $result[0], 'content' => $page_content]);
+    return showContent($categories, $page_content, $is_auth, $user_name, $result[0]['lot_name']);
+}
+
+function getUserByEmail($user_email, $link)
+{
+    $email = $user_email;
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $stmt = db_get_prepare_stmt($link, $sql, []);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    return $res;
 }

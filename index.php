@@ -30,4 +30,5 @@ $page_content = include_template('index.php', [
     'categories' => $categories,
     'adverts' => $adverts
 ]);
-print(showContent($categories, $page_content, $is_auth, $user_name));
+
+print(showContent($categories, $page_content, $is_auth, $user_name, 'YetiCave - Главная страница'));
