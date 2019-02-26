@@ -53,10 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['file'] = 'Вы не загрузили файл';
     }
     if (empty($errors)) {
-        $email = mysqli_real_escape_string($link, $user['email']);
-        $sql = "SELECT id FROM users WHERE email = '$email'";
-        $res = mysqli_query($link, $sql);
-        var_dump($res);
+        $res = getUserByEmail($user['email'], $link);
         if (mysqli_num_rows($res) > 0) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
         } else {
@@ -76,12 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 }
-$menu = include_template('menu.php', ['categories' => $categories]);
+$menu = include_template('menu.php', ['menu' => $categories]);
 $page_content = include_template('sign-up.php',
     [
+        'top_menu' => $menu,
         'user' => $user,
         'errors' => $errors,
         'dict' => $dict
     ]);
 
-print(showContent($menu, $page_content, $is_auth, $user_name));
+print(showContent($categories, $page_content, $is_auth, $user_name, 'Регистрация'));

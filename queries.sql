@@ -74,15 +74,6 @@ SELECT l.*, c.cat_name
     ON l.cat_id = c.id
  WHERE l.id = 3;
 
-/**/
-SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
-  FROM lots l
-  JOIN categories c
-    ON l.cat_id = c.id
-  LEFT OUTER JOIN lot_rates lr
-    ON l.id = lr.lot_id
- WHERE l.id  = ?;
-
 /*обновить название лота по его идентификатору*/
 UPDATE lots
    SET lot_name = 'Брюки для сноуборда RIDE Charocal/LIME'

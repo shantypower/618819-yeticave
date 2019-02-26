@@ -1,3 +1,4 @@
+<nav class="nav"><?=$top_menu; ?></nav>
 <?php $classname = isset($errors) ? "form--invalid" : "";?>
 <form class="form container <?=$classname;?>" action="sign-up.php" method="post" enctype="multipart/form-data">
     <h2>Регистрация нового аккаунта</h2>
@@ -50,8 +51,6 @@
             <span>+ Добавить</span>
         </label>
     </div>
-    </div>
-
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
     <?php if (isset($errors)): ?>
         <ul>

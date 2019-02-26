@@ -116,3 +116,13 @@ function getLotById($id, $categories, $adverts, $is_auth, $user_name, $link)
     $page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $result[0], 'content' => $page_content]);
     return showContent($categories, $page_content, $is_auth, $user_name, $result[0]['lot_name']);
 }
+
+function getUserByEmail($user_email, $link)
+{
+    $email = $user_email;
+    $sql = "SELECT id FROM users WHERE email = '$email'";
+    $stmt = db_get_prepare_stmt($link, $sql, []);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    return $res;
+}
