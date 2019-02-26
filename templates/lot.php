@@ -1,3 +1,4 @@
+<nav class="nav"><?=$top_menu; ?></nav>
 <section class="lot-item container">
     <h2><?=text_clean($lot['lot_name'])?></h2>
     <div class="lot-item__content">

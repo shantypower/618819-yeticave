@@ -76,13 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 }
-
+$menu = include_template('menu.php', ['categories' => $categories]);
 $page_content = include_template('sign-up.php',
     [
-        'categories' => $categories,
         'user' => $user,
         'errors' => $errors,
         'dict' => $dict
     ]);
 
-print(showContent($categories, $page_content, $is_auth, $user_name));
+print(showContent($menu, $page_content, $is_auth, $user_name));

@@ -4,7 +4,8 @@ require('db_connection.php');
 require_once('functions.php');
 $categories = getAllCategories($link);
 
-$page_content = include_template('add-lot.php', ['categories' => $categories]);
+$top_menu = include_template('menu.php', ['menu' => $categories]);
+$page_content = include_template('add-lot.php', ['top_menu' => $top_menu]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
 
@@ -88,5 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-print(showContent($categories, $page_content, $is_auth, $user_name));
+
+$content = include_template('layout.php', [
+    'content' => $page_content,
+    'categories' => $categories,
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
+    'title' => 'YetiCave - Добавление лота'
+]);
+print($content);
 

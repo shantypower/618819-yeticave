@@ -1,14 +1,3 @@
-<section class="promo">
-    <h2 class="promo__title">Нужен стафф для катки?</h2>
-    <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
-    <ul class="promo__list">
-        <?php foreach ($categories as $key => $value): ?>
-        <li class="promo__item <?=$value['css_cl']?>">
-            <a class="promo__link" href="pages/all-lots.html"><?=$value['cat_name']?></a>
-        </li>
-        <?php endforeach?>
-    </ul>
-</section>
 <?php $classname = isset($errors) ? "form--invalid" : "";?>
 <form class="form container <?=$classname;?>" action="sign-up.php" method="post" enctype="multipart/form-data">
     <h2>Регистрация нового аккаунта</h2>
@@ -62,14 +51,15 @@
         </label>
     </div>
     </div>
-    <?php if (isset($errors)): ?>
+
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
+    <?php if (isset($errors)): ?>
         <ul>
             <?php foreach ($errors as $err => $val): ?>
                 <li><strong><?=$dict[$err];?>:</strong><?=' ' . $val;?></li>
             <?php endforeach; ?>
         </ul>
-        <?php endif; ?>
+    <?php endif; ?>
     <button type="submit" class="button">Зарегистрироваться</button>
     <a class="text-link" href="#">Уже есть аккаунт</a>
 </form>

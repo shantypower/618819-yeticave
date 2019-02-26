@@ -39,7 +39,6 @@
         </nav>
     </div>
 </header>
-
 <main class="container">
 <?=$content?>
 </main>
