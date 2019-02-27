@@ -1,9 +1,9 @@
 <?php
 date_default_timezone_set('Asia/Chita');
-include('session.php');
-require('data.php');
-require_once('functions.php');
-require('db_connection.php');
+include('core/session.php');
+require('core/data.php');
+require_once('core/functions.php');
+require('core/db_connection.php');
 $page_content = '';
 $categories = '';
 $adverts ='';

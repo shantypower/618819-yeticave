@@ -1,8 +1,8 @@
 <?php
-include('session.php');
-require_once('data.php');
-require('db_connection.php');
-require_once('functions.php');
+include('core/session.php');
+require_once('core/data.php');
+require('core/db_connection.php');
+require_once('core/functions.php');
 $categories = getAllCategories($link);
 $adverts = getAllLots($link);
 $errors = [];
