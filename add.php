@@ -4,6 +4,11 @@ require_once('core/data.php');
 require('core/db_connection.php');
 require_once('core/functions.php');
 $categories = getAllCategories($link);
+if (!isset($_SESSION['user'])) {
+        $page_content = include_template('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
+        print(showContent($categories, $page_content, '403 Доступ запрещен'));
+    exit();
+    }
 
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $page_content = include_template('add-lot.php', ['top_menu' => $top_menu]);
