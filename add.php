@@ -93,8 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $content = include_template('layout.php', [
     'content' => $page_content,
     'categories' => $categories,
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
     'title' => 'YetiCave - Добавление лота'
 ]);
 print($content);

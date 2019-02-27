@@ -1,11 +1,10 @@
 <?php
+session_start();
 require_once('data.php');
 require('db_connection.php');
 require_once('functions.php');
-session_start();
 $categories = getAllCategories($link);
 $adverts = getAllLots($link);
-$user = [];
 $errors = [];
 $menu = include_template('menu.php', ['menu' => $categories]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -38,23 +37,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (count($errors)) {
         $page_content = include_template('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
-        print(showContent($categories, $page_content, $is_auth, 'Ошибка входа'));
+        print(showContent($categories, $page_content, 'Ошибка входа'));
     } else {
         header("Location: /index.php");
         exit();
     }
-} else {
-    if (isset($_SESSION['user'])) {
-        $user_name = $_SESSION['user'][0]['user_name'];
-        $page_content = include_template('index.php', [
-            'categories' => $categories,
-            'adverts' => $adverts,
-            'user_name' => $user_name]);
-    }
-    else {
-        $user_name = '';
-        $page_content = include_template('login.php', ['top_menu' => $menu]);
-    }
+}
+if (isset($_SESSION['user'])) {
+    $user_name = $_SESSION['user'][0]['user_name'];
+    $page_content = include_template('index.php', [
+        'categories' => $categories,
+        'adverts' => $adverts,
+        'user_name' => $user_name]);
+}
+else {
+    $page_content = include_template('login.php', ['top_menu' => $menu]);
 }
 
-print(showContent($categories, $page_content, $is_auth, $user_name, 'Авторизация'));
+print(showContent($categories, $page_content, 'Авторизация'));

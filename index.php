@@ -9,21 +9,21 @@ $adverts ='';
 if ($isConnect == false) {
     $error = mysqli_connect_error();
     $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $is_auth, $user_name));
+    print(showContent($categories, $page_content));
     return;
 }
 $categories = getAllCategories($link);
 if (count($categories) == 0) {
     $error = mysqli_error($link);
     $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $is_auth, $user_name));
+    print(showContent($categories, $page_content));
     return;
 };
 $adverts = getAllLots($link);
 if (count($adverts) == 0) {
     $error = mysqli_error($link);
     $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $is_auth, $user_name));
+    print(showContent($categories, $page_content));
     return;
 };
 $page_content = include_template('index.php', [
@@ -31,4 +31,4 @@ $page_content = include_template('index.php', [
     'adverts' => $adverts
 ]);
 
-print(showContent($categories, $page_content, $is_auth, $user_name, 'YetiCave - Главная страница'));
+print(showContent($categories, $page_content, 'YetiCave - Главная страница'));

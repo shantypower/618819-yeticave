@@ -24,11 +24,11 @@ VALUES ('2018-08-20 22:44:00', 'Gosha', 'gosha@mail.ru', 'qwerty', 'https://klyk
 
 /*Добавляем список объявлений*/
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-02-14 21:00:00', '2014 Rossignol District Snowboard', 'Немного б/у', 'img/lot-1.jpg', '10999', '2019-02-28 21:00:00', '1000', '1', '1');
+VALUES ('2019-02-14 21:00:00', '2014 Rossignol District Snowboard', 'Немного б/у', 'img/lot-1.jpg', '10999', '2019-03-28 21:00:00', '1000', '1', '1');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-01-21 21:00:00', 'DC Ply Mens 2016/2017 Snowboard', 'Графитовый скользяк, кант не сточен', 'img/lot-2.jpg', '159999', '2019-02-26 21:00:00', '1000', '2', '1');
+VALUES ('2019-01-21 21:00:00', 'DC Ply Mens 2016/2017 Snowboard', 'Графитовый скользяк, кант не сточен', 'img/lot-2.jpg', '159999', '2019-03-26 21:00:00', '1000', '2', '1');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-VALUES ('2019-01-22 21:00:00', 'Крепления Union Contact Pro 2015 года размер L/XL', 'Стрепы работают отлично', 'img/lot-3.jpg', '8000', '2019-02-18 21:00:00', '500', '2', '2');
+VALUES ('2019-01-22 21:00:00', 'Крепления Union Contact Pro 2015 года размер L/XL', 'Стрепы работают отлично', 'img/lot-3.jpg', '8000', '2019-03-18 21:00:00', '500', '2', '2');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
 VALUES ('2019-01-23 21:00:00', 'Ботинки для сноуборда DC Mutiny Charocal', 'Новые', 'img/lot-4.jpg', '10999', '2019-02-25 21:00:00', '10999', '1', '3');
 INSERT INTO lots(date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)

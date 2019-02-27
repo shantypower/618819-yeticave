@@ -82,4 +82,4 @@ $page_content = include_template('sign-up.php',
         'dict' => $dict
     ]);
 
-print(showContent($categories, $page_content, $is_auth, $user_name, 'Регистрация'));
+print(showContent($categories, $page_content, 'Регистрация'));

@@ -22,19 +22,20 @@
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
         <nav class="user-menu">
-            <?php if (isset($_SESSION['user'])): ?>
-            <div class="user-menu__logged">
-                <p><?=$_SESSION['user'][0]['user_name'];?></p>
-            </div>
+            <?php if (!isset($_SESSION['user'])): ?>
+            <ul class="user-menu__list">
+                <li class="user-menu__item">
+                    <a href="sign-up.php">Регистрация</a>
+                </li>
+                <li class="user-menu__item">
+                    <a href="login.php">Вход</a>
+                </li>
+            </ul>
                 <?php else:?>
-                <ul class="user-menu__list">
-                    <li class="user-menu__item">
-                        <a href="sign-up.php">Регистрация</a>
-                    </li>
-                    <li class="user-menu__item">
-                        <a href="login.php">Вход</a>
-                    </li>
-                </ul>
+            <div class="user-menu__logged">
+                <p><?=strip_tags($_SESSION['user'][0]['user_name']);?></p>
+                <a href="logout.php">Выход</a>
+            </div>
             <?php endif; ?>
         </nav>
     </div>
