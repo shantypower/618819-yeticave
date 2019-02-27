@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Chita');
+include('session.php');
 require('data.php');
 require_once('functions.php');
 require('db_connection.php');
