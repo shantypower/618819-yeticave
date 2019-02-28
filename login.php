@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors['password'] = 'Вы ввели неверный пароль';
         }
     } else {
-        $errors['email'] = 'Такой пользователь не найден';
+        $errors['email'] = 'Пользователь с таким e-mail не найден';
     }
     if (count($errors)) {
         $page_content = include_template('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
