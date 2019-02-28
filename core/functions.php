@@ -95,9 +95,9 @@ function getLotById($id, $categories, $adverts, $link)
 
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    return $result = mysqli_stmt_get_result($stmt);
 
-    if (!$result) {
+    /* if (!$result) {
         $error = mysqli_error($link);
         $page_content = include_template('error.php', ['error' => $error]);
         return showContent($categories, $page_content, $error);
@@ -112,7 +112,7 @@ function getLotById($id, $categories, $adverts, $link)
     }
     $top_menu = include_template('menu.php', ['menu' => $categories]);
     $page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $result[0], 'content' => $page_content]);
-    return showContent($categories, $page_content, $result[0]['lot_name']);
+    return showContent($categories, $page_content, $result[0]['lot_name']); */
 }
 
 function getUserByEmail($user_email, $link)
@@ -122,4 +122,31 @@ function getUserByEmail($user_email, $link)
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     return $res;
+}
+
+function makeRateValidation()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $rate = $_POST['cost'];
+        if (empty($rate)) {
+            return $error = 'Это поле надо заполнить';
+        }
+        if (($rate < 0) || ($rate < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step']))) {
+            return $error = 'Значение должно быть больше, чем текущая цена лота + шаг ставки';
+        }
+        return $error = '';
+    }
+}
+
+function makeRate($rate, $user_id, $lot_id, $link)
+{
+    $sql = "INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
+            VALUES (NOW(), ?, ?, ?;";
+        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $_SESSION['user'][0]['id'], $lot['lot_name']]);
+        $res = mysqli_stmt_execute($stmt);
+        if ($res) {
+            header("Location: lot.php?id=" . $lot_id);
+        } else {
+            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+        }
 }

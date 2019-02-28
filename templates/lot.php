@@ -10,7 +10,6 @@
             <p class="lot-item__description"><?=text_clean($lot['descr'])?></p>
         </div>
         <div class="lot-item__right">
-            <?php if (isset($_SESSION['user'])): ?>
             <div class="lot-item__state">
                 <div class="lot-item__timer timer"><?=lot_lifetime()?></div>
                 <div class="lot-item__cost-state">
@@ -23,17 +22,31 @@
                     </div>
                 </div>
             </div>
-            <form class="lot-item__form" action="add-rate.php" method="post">
-            <?php $classname = isset($errors['lot-name']) ? "form__item--invalid" : "";
-            $value = isset($rate['rate']) ? $rate['rate'] : "";
-            $error = isset($errors['rate']) ? $errors['rate'] : "";?>
-                <p class="lot-item__form-item <?=$classname;?>">
-                    <label for="cost">Ваша ставка</label>
-                    <input id="cost" type="text" name="cost" placeholder="<?=text_clean($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])?>">
-                    <span class="form__error">Введите наименование лота</span>
-                </p>
-                <button type="submit" class="button">Сделать ставку</button>
+            <?php if (isset($_SESSION['user'])): ?>
+            <form class="lot-item__form" action="lot.php?id=<?=$lot['id'];?>" method="post">
+              <?php $classname = isset($errors['cost']) ? "form__item--invalid" : "";
+              $value = isset($lot['cost']) ? $lot['cost'] : "";
+              $error = isset($errors['cost']) ? $errors['cost'] : "";?>
+              <p class="lot-item__form-item form__item <?=$classname;?>">
+                <label for="cost">Ваша ставка</label>
+                <input id="cost" type="text" name="cost" value="<?=$value;?>" placeholder="<?=text_clean($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])?>">
+                <span class="form__error"><?=$error; ?></span>
+              </p>
+              <button type="submit" class="button">Сделать ставку</button>
             </form>
+          </div>
+          <!-- <div class="history">
+            <h3>История ставок (<span>10</span>)</h3>
+            <table class="history__list">
+                <?php foreach ($rates as $item): ?>
+                    <tr class="history__item">
+                        <td class="history__name"><?=$item['name'] ?></td>
+                        <td class="history__price"><?=text_clean($item['rate'])?></td>
+                        <td class="history__time"><?=text_clean($item['date_add']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+          </div> -->
             <?php endif; ?>
         </div>
     </div>
