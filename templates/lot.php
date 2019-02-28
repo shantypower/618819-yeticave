@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <?php if (isset($_SESSION['user'])): ?>
+            <?php if (isset($_SESSION['user']) and ($_SESSION['user'][0]['id'] != $lot['author_id']) and ($lot['date_end'] < date_create('now'))): ?>
             <form class="lot-item__form" action="lot.php?id=<?=$lot['id'];?>" method="post">
               <?php $classname = isset($errors['cost']) ? "form__item--invalid" : "";
               $value = isset($lot['cost']) ? $lot['cost'] : "";

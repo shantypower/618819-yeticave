@@ -85,13 +85,13 @@ function showContent($categories, $page_content, $title)
 function getLotById($id, $categories, $adverts, $link)
 {
     $page_content = [];
-    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, c.cat_name
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
               FROM lots l
               JOIN categories c
                 ON l.cat_id = c.id
               LEFT OUTER JOIN lot_rates lr
                 ON l.id = lr.lot_id
-             WHERE l.id  = ? GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, c.cat_name";
+             WHERE l.id  = ? GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name";
 
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);
@@ -105,31 +105,4 @@ function getUserByEmail($user_email, $link)
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     return $res;
-}
-
-function makeRateValidation()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $rate = $_POST['cost'];
-        if (empty($rate)) {
-            return $error = 'Это поле надо заполнить';
-        }
-        if (($rate < 0) || ($rate < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step']))) {
-            return $error = 'Значение должно быть больше, чем текущая цена лота + шаг ставки';
-        }
-        return $error = '';
-    }
-}
-
-function makeRate($rate, $user_id, $lot_id, $link)
-{
-    $sql = "INSERT INTO lot_rates(date_add, rate, user_id, lot_id)
-            VALUES (NOW(), ?, ?, ?;";
-        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $_SESSION['user'][0]['id'], $lot['lot_name']]);
-        $res = mysqli_stmt_execute($stmt);
-        if ($res) {
-            header("Location: lot.php?id=" . $lot_id);
-        } else {
-            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-        }
 }
