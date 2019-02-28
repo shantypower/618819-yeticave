@@ -96,23 +96,6 @@ function getLotById($id, $categories, $adverts, $link)
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);
     return $result = mysqli_stmt_get_result($stmt);
-
-    /* if (!$result) {
-        $error = mysqli_error($link);
-        $page_content = include_template('error.php', ['error' => $error]);
-        return showContent($categories, $page_content, $error);
-    }
-
-    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    if (count($result) == 0) {
-        http_response_code(404);
-        $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-        return showContent($categories, $page_content, '404 Страница не найдена');
-    }
-    $top_menu = include_template('menu.php', ['menu' => $categories]);
-    $page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $result[0], 'content' => $page_content]);
-    return showContent($categories, $page_content, $result[0]['lot_name']); */
 }
 
 function getUserByEmail($user_email, $link)
