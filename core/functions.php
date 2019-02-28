@@ -84,7 +84,6 @@ function showContent($categories, $page_content, $title)
 
 function getLotById($id, $categories, $adverts, $link)
 {
-    $page_content = [];
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
               FROM lots l
               JOIN categories c
