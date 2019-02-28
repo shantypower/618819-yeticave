@@ -117,9 +117,8 @@ function getLotById($id, $categories, $adverts, $link)
 
 function getUserByEmail($user_email, $link)
 {
-    $email = $user_email;
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $stmt = db_get_prepare_stmt($link, $sql, []);
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = db_get_prepare_stmt($link, $sql, [$user_email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     return $res;
