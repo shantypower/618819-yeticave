@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $res = getUserByEmail($form['email'], $link);
     $user = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
-    if (!count($errors) and $user) {
+    if (!count($errors) && $user) {
 
         if (password_verify($form['password'], $user[0]['user_pass'])) {
             $_SESSION['user'] = $user;

@@ -84,7 +84,7 @@ function showContent($categories, $page_content, $user_name, $is_auth, $title)
     return $show_page;
 }
 
-function getLotById($id, $categories, $adverts, $link)
+function getLotById($id, $link)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
               FROM lots l
