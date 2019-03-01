@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return;
     } else {
         $sql = 'INSERT INTO lot_rates (date_add, rate, user_id, lot_id) VALUES (NOW(), ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $_SESSION['user'][0]['id'], $id]);
+        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $_SESSION['user']['id'], $id]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {

@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
         $errors['email'] = 'Введите корректный e-mail';
     }
-    $res = getUserByEmail($form['email'], $link);
-    $user = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null;
+    $user = getUserByEmail($form['email'], $link);
+    /* $user = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null; */
     if (!count($errors) && $user) {
 
-        if (password_verify($form['password'], $user[0]['user_pass'])) {
+        if (password_verify($form['password'], $user['user_pass'])) {
             $_SESSION['user'] = $user;
         } else {
             $errors['password'] = 'Вы ввели неверный пароль';

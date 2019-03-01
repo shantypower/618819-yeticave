@@ -110,7 +110,11 @@ function getUserByEmail($user_email, $link)
     $stmt = db_get_prepare_stmt($link, $sql, [$user_email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
-    return $res;
+    if (!$res) {
+        return null;
+    }
+    $user = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $user[0];
 }
 
 function checkUserRated($id, $link)
@@ -126,7 +130,7 @@ function checkUserRated($id, $link)
         foreach ( $res as $key1 => $item1) {
             foreach ($item1 as $item2) {
                 $rate = $item1['user_id'];
-                if ($rate == $_SESSION['user'][0]['id']) {
+                if ($rate == $_SESSION['user']['id']) {
                     return true;
                 }
             }
