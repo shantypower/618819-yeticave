@@ -1,6 +1,7 @@
 <?php
 $is_auth = 0;
 $user_name = '';
+$isRate = false;
 date_default_timezone_set('Asia/Chita');
 include('core/session.php');
 require_once('core/data.php');
@@ -74,5 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot[0], 'is_auth' => $is_auth, 'user_name' => $user_name, 'content' => $page_content]);
+if (isset($_SESSION['user'])){
+    $isRate = checkUserRated($id, $link);
+}
+
+$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot[0], 'is_auth' => $is_auth, 'isRate' => $isRate, 'user_name' => $user_name, 'content' => $page_content]);
 print(showContent($categories, $page_content, $user_name, $is_auth, $lot[0]['lot_name']));

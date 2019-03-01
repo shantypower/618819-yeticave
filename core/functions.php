@@ -107,3 +107,26 @@ function getUserByEmail($user_email, $link)
     $res = mysqli_stmt_get_result($stmt);
     return $res;
 }
+
+function checkUserRated($id, $link)
+{
+    $sql = 'SELECT user_id, lot_id
+          FROM lot_rates
+         WHERE lot_id = ?;';
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($result) {
+        foreach ( $res as $key1 => $item1) {
+            foreach ($item1 as $item2) {
+                $rate = $item1['user_id'];
+                if ($rate == $_SESSION['user'][0]['id']) {
+                    return true;
+                }
+            }
+
+        }
+    }
+    return false;
+}
