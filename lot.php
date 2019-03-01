@@ -1,4 +1,6 @@
 <?php
+$is_auth = 0;
+$user_name = '';
 date_default_timezone_set('Asia/Chita');
 include('core/session.php');
 require_once('core/data.php');
@@ -16,7 +18,7 @@ $result = getLotById($id, $categories, $adverts, $link);
 if (!$result) {
     $error = mysqli_error($link);
     $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $error));
+    print(showContent($categories, $page_content, $user_name, $is_auth, $error));
 }
 
 $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -24,7 +26,7 @@ $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
 if (count($lot) == 0) {
     http_response_code(404);
     $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    print(showContent($categories, $page_content, '404 Страница не найдена'));
+    print(showContent($categories, $page_content, $user_name, $is_auth, '404 Страница не найдена'));
 }
 
 
@@ -54,9 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'rates' => $rates,
             'cost' => $rates['cost'],
             'errors' => $errors,
-            'dict' => $dict
+            'dict' => $dict,
+            'is_auth' => $is_auth
         ]);
-        print(showContent($categories, $page_content, 'Введена неверная цена'));
+        print(showContent($categories, $page_content, $user_name, $is_auth, 'Введена неверная цена'));
         return;
     } else {
         $sql = 'INSERT INTO lot_rates (date_add, rate, user_id, lot_id) VALUES (NOW(), ?, ?, ?)';
@@ -67,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: lot.php?id=" . $id);
         } else {
             $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-            print(showContent($categories, $page_content, mysqli_error($link)));
+            print(showContent($categories, $page_content, $user_name, $is_auth, mysqli_error($link)));
         }
     }
 }
-$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot[0], 'content' => $page_content]);
-print(showContent($categories, $page_content, $lot[0]['lot_name']));
+$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot[0], 'is_auth' => $is_auth, 'user_name' => $user_name, 'content' => $page_content]);
+print(showContent($categories, $page_content, $user_name, $is_auth, $lot[0]['lot_name']));

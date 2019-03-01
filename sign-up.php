@@ -3,6 +3,8 @@ require_once('core/data.php');
 require('core/db_connection.php');
 require_once('core/functions.php');
 $categories = getAllCategories($link);
+$user_name = '';
+$is_auth = 0;
 $user = [];
 $errors = [];
 $dict = [];
@@ -82,4 +84,4 @@ $page_content = include_template('sign-up.php',
         'dict' => $dict
     ]);
 
-print(showContent($categories, $page_content, 'Регистрация'));
+print(showContent($categories, $page_content, $user_name, $is_auth, 'Регистрация'));

@@ -72,11 +72,13 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showContent($categories, $page_content, $title)
+function showContent($categories, $page_content, $user_name, $is_auth, $title)
 {
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
+        'user_name' => $user_name,
+        'is_auth' => $is_auth,
         'title' => $title
     ]);
     return $show_page;
