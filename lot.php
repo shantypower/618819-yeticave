@@ -72,6 +72,7 @@ if (isset($_SESSION['user'])){
     $isRate = checkUserRated($id, $link);
     $user_id = $_SESSION['user']['id'];
 }
+$current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
 
-$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot, 'is_auth' => $is_auth, 'isRate' => $isRate, 'user_id' => $user_id, 'content' => $page_content]);
+$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot, 'is_auth' => $is_auth, 'isRate' => $isRate, 'current_price' => $current_price, 'user_id' => $user_id, 'content' => $page_content]);
 print(showContent($categories, $page_content, $user_name, $is_auth, $lot['lot_name']));
