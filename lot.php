@@ -13,6 +13,7 @@ $categories = getAllCategories($link);
 $adverts = getAllLots($link);
 $lot = '';
 $page_content = '';
+$current_price = 0;
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
 $lot = getLotById($id, $link);
@@ -23,6 +24,7 @@ if (!$lot) {
     print(showContent($categories, $page_content, $user_name, $is_auth, '404 Страница не найдена'));
 }
 
+$current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $rates = $_POST;
@@ -51,7 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'cost' => $rates['cost'],
             'errors' => $errors,
             'dict' => $dict,
-            'is_auth' => $is_auth
+            'is_auth' => $is_auth,
+            'isRate' => $isRate,
+            'user_id' => $user_id,
+            'current_price' => $current_price
         ]);
         print(showContent($categories, $page_content, $user_name, $is_auth, 'Введена неверная цена'));
         return;
@@ -72,7 +77,6 @@ if (isset($_SESSION['user'])){
     $isRate = checkUserRated($id, $link);
     $user_id = $_SESSION['user']['id'];
 }
-$current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
 
 $page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot, 'is_auth' => $is_auth, 'isRate' => $isRate, 'current_price' => $current_price, 'user_id' => $user_id, 'content' => $page_content]);
 print(showContent($categories, $page_content, $user_name, $is_auth, $lot['lot_name']));
