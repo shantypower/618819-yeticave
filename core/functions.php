@@ -96,7 +96,12 @@ function getLotById($id, $link)
 
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);
-    return $result = mysqli_stmt_get_result($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        return null;
+    }
+    $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $lot[0];
 }
 
 function getUserByEmail($user_email, $link)

@@ -14,17 +14,9 @@ $lot = '';
 $page_content = '';
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
-$result = getLotById($id, $categories, $adverts, $link);
+$lot = getLotById($id, $link);
 
-if (!$result) {
-    $error = mysqli_error($link);
-    $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $user_name, $is_auth, $error));
-}
-
-$lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-if (count($lot) == 0) {
+if (!$lot) {
     http_response_code(404);
     $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
     print(showContent($categories, $page_content, $user_name, $is_auth, '404 Страница не найдена'));
@@ -46,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['cost'] = 'Сумма ставки должна быть числом';
     } else if ($_POST['cost'] <= 0) {
         $errors['cost'] = 'Сумма ставки должна быть больше нуля';
-    } else if ($_POST['cost'] < ($lot[0]['MAX(lr.rate)'] + $lot[0]['start_price'] + $lot[0]['price_step'])) {
+    } else if ($_POST['cost'] < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])) {
         $errors['cost'] = 'Сумма ставки должна быть больше текущей + шаг торгов';
     }
 
     if (count($errors)) {
         $page_content = include_template('lot.php', [
             'top_menu' => $top_menu,
-            'lot' => $lot[0],
+            'lot' => $lot,
             'rates' => $rates,
             'cost' => $rates['cost'],
             'errors' => $errors,
@@ -79,5 +71,5 @@ if (isset($_SESSION['user'])){
     $isRate = checkUserRated($id, $link);
 }
 
-$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot[0], 'is_auth' => $is_auth, 'isRate' => $isRate, 'user_name' => $user_name, 'content' => $page_content]);
-print(showContent($categories, $page_content, $user_name, $is_auth, $lot[0]['lot_name']));
+$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot, 'is_auth' => $is_auth, 'isRate' => $isRate, 'user_name' => $user_name, 'content' => $page_content]);
+print(showContent($categories, $page_content, $user_name, $is_auth, $lot['lot_name']));
