@@ -139,3 +139,47 @@ function checkUserRated($id, $link)
     }
     return false;
 }
+
+function getRatesForLot($id, $link)
+{
+    $sql = 'SELECT lr.user_id, lr.rate, lr.date_add, lr.lot_id, u.user_name, u.id
+             FROM lot_rates lr
+             LEFT OUTER JOIN users u
+               ON lr.user_id = u.id
+             LEFT OUTER JOIN lots l
+               ON lr.lot_id = l.id
+            WHERE lr.lot_id = ?
+            ORDER BY lr.date_add DESC;';
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function humanDate($time)
+{
+    $lot_time_sec = strtotime($time);
+    $secs_passed = strtotime('now') - $lot_time_sec;
+
+    $days = floor($secs_passed / 86400);
+
+    if ($days == 0) {
+        $hours = floor($secs_passed / 3600);
+        if ($hours > 0) {
+            $result = $hours . ' часов назад';
+            if (((($hours % 10) == 1 )&&($hours != 11 ))||($hours == 21)) {
+                $result = $hours . ' час назад';
+            } elseif ((($hours > 1 )&&($hours < 5))||(( $hours >= 22)&&( $hours <=23 ))){
+                $result = $hours . ' часа назад';
+            } elseif (($hours >= 5)&&($hours < 21)){
+                $result = $hours . ' часов назад';
+            }
+        }
+        $minutes = floor(($secs_passed % 3600)/60);
+        if ((($minutes % 10) == 1)&&($minutes != 11)) {
+            $result = $minutes . ' минуту назад';
+        }
+        $result = $minutes . ' минут(ы) назад';
+    } else $result = date_format(date_create($time), "d.m.y в H:i");
+    return $result;
+}

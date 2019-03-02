@@ -87,7 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $sql = "INSERT INTO lots (date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
                 VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?);";
-        $stmt = db_get_prepare_stmt($link, $sql, [$lot['lot-name'], $lot['message'], 'img/' . $lot['path'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step'], $_SESSION['user']['id'], $lot['category']]);
+        $stmt = db_get_prepare_stmt($link, $sql, [
+            $lot['lot-name'],
+            $lot['message'],
+            'img/' . $lot['path'],
+            $lot['lot-rate'],
+            $lot['lot-date'],
+            $lot['lot-step'],
+            $_SESSION['user']['id'],
+            $lot['category']
+        ]);
         $res = mysqli_stmt_execute($stmt);
         if ($res) {
             $lot_id = mysqli_insert_id($link);

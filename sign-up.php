@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (empty($errors)) {
         $res = getUserByEmail($user['email'], $link);
-        if (mysqli_num_rows($res) > 0) {
+        if (count($res) > 0) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
         } else {
             $password = password_hash($user['password'], PASSWORD_DEFAULT);

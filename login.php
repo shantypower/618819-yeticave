@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['email'] = 'Введите корректный e-mail';
     }
     $user = getUserByEmail($form['email'], $link);
-    /* $user = $res ? mysqli_fetch_all($res, MYSQLI_ASSOC) : null; */
     if (!count($errors) && $user) {
 
         if (password_verify($form['password'], $user['user_pass'])) {

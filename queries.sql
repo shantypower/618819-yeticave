@@ -15,11 +15,11 @@ INSERT INTO categories(cat_name, css_cl)
 VALUES ('Разное', 'promo__item--other');
 
 /*Добавляем список пользователей*/
-INSERT INTO users(reg_date, email, user_name, user_pass, avatar_src, contacts)
+INSERT INTO users(reg_date, user_name, email, user_pass, avatar_src, contacts)
 VALUES ('2018-06-04 22:30:00', 'Vasya', 'vasya@mail.ru', '123456789', 'http://andrey-eltsov.ru/wp-content/uploads/2017/09/DsSd-Stim_hfhdY_jf-jfY-%D0%A1%D1%82%D0%B8%D0%BC-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%B0%D1%86%D0%B0%D0%BD%D0%BE%D0%B2.jpg', '8-924-888-8855');
-INSERT INTO users(reg_date, email, user_name, user_pass, avatar_src, contacts)
+INSERT INTO users(reg_date, user_name, email, user_pass, avatar_src, contacts)
 VALUES ('2019-01-04 21:00:00', 'Petya', 'petya@mail.ru', '987654321', 'http://andrey-eltsov.ru/wp-content/uploads/2017/09/DopNaAvu1-300x270.jpg', '9-999-111-0000');
-INSERT INTO users(reg_date, email, user_name, user_pass, avatar_src, contacts)
+INSERT INTO users(reg_date, user_name, email, user_pass, avatar_src, contacts)
 VALUES ('2018-08-20 22:44:00', 'Gosha', 'gosha@mail.ru', 'qwerty', 'https://klyker.com/wp-content/uploads/2013/04/1910.jpg', '8-924-555-3333');
 
 /*Добавляем список объявлений*/
@@ -85,4 +85,11 @@ SELECT *
  WHERE lot_id = 6
  ORDER BY date_add
   DESC;
-
+/**/
+SELECT lr.user_id, lr.lot_id, u.user_name, u.id
+  FROM lot_rates lr
+  LEFT OUTER JOIN users u
+    ON lr.user_id = u.id
+  LEFT OUTER JOIN lots l
+    ON lr.lot_id = l.id
+ WHERE lr.lot_id = 6;

@@ -14,6 +14,7 @@ $adverts = getAllLots($link);
 $lot = '';
 $page_content = '';
 $current_price = 0;
+$rates = '';
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
 $lot = getLotById($id, $link);
@@ -78,5 +79,17 @@ if (isset($_SESSION['user'])){
     $user_id = $_SESSION['user']['id'];
 }
 
-$page_content = include_template('lot.php', ['top_menu' => $top_menu, 'lot' => $lot, 'is_auth' => $is_auth, 'isRate' => $isRate, 'current_price' => $current_price, 'user_id' => $user_id, 'content' => $page_content]);
+$rates = getRatesForLot($id, $link);
+$rates_count = count($rates);
+$page_content = include_template('lot.php', [
+    'top_menu' => $top_menu,
+    'lot' => $lot,
+    'is_auth' => $is_auth,
+    'isRate' => $isRate,
+    'current_price' => $current_price,
+    'user_id' => $user_id,
+    'rates' => $rates,
+    'rates_count' => $rates_count,
+    'content' => $page_content
+]);
 print(showContent($categories, $page_content, $user_name, $is_auth, $lot['lot_name']));
