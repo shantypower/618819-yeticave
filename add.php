@@ -1,14 +1,13 @@
 <?php
-$is_auth = 0;
-$user_name = '';
+
 include('core/session.php');
 require_once('core/data.php');
 require('core/db_connection.php');
 require_once('core/functions.php');
 $categories = getAllCategories($link);
-if ($is_auth == 0) {
+if ($user_data['is_auth'] == 0) {
         $page_content = include_template('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
-        print(showContent($categories, $page_content, $user_name, $is_auth, '403 Доступ запрещен'));
+        print(showContent($categories, $page_content, $user_data, '403 Доступ запрещен'));
     exit();
     }
 
@@ -94,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $lot['lot-rate'],
             $lot['lot-date'],
             $lot['lot-step'],
-            $_SESSION['user']['id'],
+            $user_data['id'],
             $lot['category']
         ]);
         $res = mysqli_stmt_execute($stmt);
@@ -111,8 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $content = include_template('layout.php', [
     'content' => $page_content,
     'categories' => $categories,
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    'user_data' => $user_data,
     'title' => 'YetiCave - Добавление лота'
 ]);
 print($content);

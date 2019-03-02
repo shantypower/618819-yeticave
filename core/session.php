@@ -1,7 +1,10 @@
 <?php
+$user_data['is_auth'] = 0;
+require_once('core/data.php');
+require('core/db_connection.php');
+require_once('core/functions.php');
 session_start();
-if (isset($_SESSION['user'])){
-    $is_auth = 1;
-    $user_name = $_SESSION['user']['user_name'];
-    $user_id = $_SESSION['user']['id'];
+if (isset($_SESSION['id'])){
+    $user_data = getUserByID($_SESSION['id'], $link);
+    $user_data['is_auth'] = 1;
 }

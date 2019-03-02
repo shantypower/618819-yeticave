@@ -72,13 +72,12 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showContent($categories, $page_content, $user_name, $is_auth, $title)
+function showContent($categories, $page_content, $user_data, $title)
 {
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
-        'user_name' => $user_name,
-        'is_auth' => $is_auth,
+        'user_data' => $user_data,
         'title' => $title
     ]);
     return $show_page;
@@ -111,6 +110,16 @@ function getUserByEmail($user_email, $link)
     return $user[0] ?? null;
 }
 
+function getUserByID($id, $link)
+{
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $user = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $user[0] ?? null;
+}
+
 function checkUserRated($id, $link)
 {
     $sql = 'SELECT user_id, lot_id
@@ -124,7 +133,7 @@ function checkUserRated($id, $link)
         foreach ( $res as $key1 => $item1) {
             foreach ($item1 as $item2) {
                 $rate = $item1['user_id'];
-                if ($rate == $_SESSION['user']['id']) {
+                if ($rate == $_SESSION['id']) {
                     return true;
                 }
             }

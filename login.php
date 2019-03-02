@@ -1,6 +1,4 @@
 <?php
-$is_auth = 0;
-$user_name = '';
 include('core/session.php');
 require_once('core/data.php');
 require('core/db_connection.php');
@@ -29,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!count($errors) && $user) {
 
         if (password_verify($form['password'], $user['user_pass'])) {
-            $_SESSION['user'] = $user;
+            $_SESSION['id'] = $user['id'];
         } else {
             $errors['password'] = 'Вы ввели неверный пароль';
         }
@@ -38,23 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (count($errors)) {
         $page_content = include_template('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
-        print(showContent($categories, $page_content, $user_name, $is_auth, 'Ошибка входа'));
+        print(showContent($categories, $page_content, $user_data, 'Ошибка входа'));
         return;
     } else {
-        $is_auth = 1;
+        $user_data['is_auth'] = 1;
         header("Location: /index.php");
         exit();
     }
 }
-if (isset($_SESSION['user'])) {
+if (isset($_SESSION['id'])) {
     $page_content = include_template('index.php', [
         'categories' => $categories,
         'adverts' => $adverts,
-        'is_auth' => $is_auth,
-        'user_name' => $user_name]);
+        'user_data' => $user_data]);
 }
 else {
     $page_content = include_template('login.php', ['top_menu' => $menu]);
 }
-
-print(showContent($categories, $page_content, $user_name, $is_auth, 'Авторизация'));
+print(showContent($categories, $page_content, $user_data, 'Авторизация'));

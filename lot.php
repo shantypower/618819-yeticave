@@ -1,7 +1,4 @@
 <?php
-$is_auth = 0;
-$user_name = '';
-$user_id = '';
 $isRate = false;
 date_default_timezone_set('Asia/Chita');
 include('core/session.php');
@@ -22,7 +19,7 @@ $lot = getLotById($id, $link);
 if (!$lot) {
     http_response_code(404);
     $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    print(showContent($categories, $page_content, $user_name, $is_auth, '404 Страница не найдена'));
+    print(showContent($categories, $page_content, $user_data, '404 Страница не найдена'));
 }
 
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
@@ -54,29 +51,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'cost' => $rates['cost'],
             'errors' => $errors,
             'dict' => $dict,
-            'is_auth' => $is_auth,
             'isRate' => $isRate,
-            'user_id' => $user_id,
+            'user_data' => $user_data,
             'current_price' => $current_price
         ]);
-        print(showContent($categories, $page_content, $user_name, $is_auth, 'Введена неверная цена'));
+        print(showContent($categories, $page_content, $user_data, 'Введена неверная цена'));
         return;
     } else {
         $sql = 'INSERT INTO lot_rates (date_add, rate, user_id, lot_id) VALUES (NOW(), ?, ?, ?)';
-        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $_SESSION['user']['id'], $id]);
+        $stmt = db_get_prepare_stmt($link, $sql, [$_POST['cost'], $user_data['id'], $id]);
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
             header("Location: lot.php?id=" . $id);
         } else {
             $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-            print(showContent($categories, $page_content, $user_name, $is_auth, mysqli_error($link)));
+            print(showContent($categories, $page_content, $user_data, mysqli_error($link)));
         }
     }
 }
-if (isset($_SESSION['user'])){
+if (isset($user_data['id'])){
     $isRate = checkUserRated($id, $link);
-    $user_id = $_SESSION['user']['id'];
 }
 
 $rates = getRatesForLot($id, $link);
@@ -84,12 +79,11 @@ $rates_count = count($rates);
 $page_content = include_template('lot.php', [
     'top_menu' => $top_menu,
     'lot' => $lot,
-    'is_auth' => $is_auth,
     'isRate' => $isRate,
     'current_price' => $current_price,
-    'user_id' => $user_id,
+    'user_data' => $user_data,
     'rates' => $rates,
     'rates_count' => $rates_count,
     'content' => $page_content
 ]);
-print(showContent($categories, $page_content, $user_name, $is_auth, $lot['lot_name']));
+print(showContent($categories, $page_content, $user_data, $lot['lot_name']));
