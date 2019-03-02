@@ -97,11 +97,8 @@ function getLotById($id, $link)
     $stmt = db_get_prepare_stmt($link, $sql, [$id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    if (!$result) {
-        return null;
-    }
     $lot = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    return $lot[0];
+    return $lot[0] ?? null;
 }
 
 function getUserByEmail($user_email, $link)
@@ -110,11 +107,8 @@ function getUserByEmail($user_email, $link)
     $stmt = db_get_prepare_stmt($link, $sql, [$user_email]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
-    if (!$res) {
-        return null;
-    }
     $user = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    return $user[0];
+    return $user[0] ?? null;
 }
 
 function checkUserRated($id, $link)
@@ -126,7 +120,7 @@ function checkUserRated($id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    if ($result) {
+    if (mysqli_num_rows($result) > 0) {
         foreach ( $res as $key1 => $item1) {
             foreach ($item1 as $item2) {
                 $rate = $item1['user_id'];

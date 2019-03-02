@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (count($errors)) {
         $page_content = include_template('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
         print(showContent($categories, $page_content, $user_name, $is_auth, 'Ошибка входа'));
+        return;
     } else {
         $is_auth = 1;
         header("Location: /index.php");

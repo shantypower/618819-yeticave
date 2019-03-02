@@ -10,7 +10,7 @@
     <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=$value;?>">
     <span class="form__error"><?=$error;?></span>
     </div>
-    <?php $classname = isset($errors['email']) ? "form__item--invalid" : "";
+    <?php $classname = isset($errors['password']) ? "form__item--invalid" : "";
     $error = isset($errors['password']) ? $errors['password'] : "";?>
     <div class="form__item form__item--last <?=$classname;?>">
     <label for="password">Пароль*</label>
