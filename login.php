@@ -6,6 +6,7 @@ require_once('core/functions.php');
 $categories = getAllCategories($link);
 $adverts = getAllLots($link);
 $errors = [];
+$search = '';
 $menu = include_template('menu.php', ['menu' => $categories]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $form = $_POST;
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (count($errors)) {
         $page_content = include_template('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
-        print(showContent($categories, $page_content, $user_data, 'Ошибка входа'));
+        print(showContent($categories, $page_content, $user_data, $search, 'Ошибка входа'));
         return;
     } else {
         $user_data['is_auth'] = 1;
@@ -53,4 +54,4 @@ if (isset($_SESSION['id'])) {
 else {
     $page_content = include_template('login.php', ['top_menu' => $menu]);
 }
-print(showContent($categories, $page_content, $user_data, 'Авторизация'));
+print(showContent($categories, $page_content, $user_data, $search, 'Авторизация'));

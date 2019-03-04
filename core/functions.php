@@ -72,12 +72,13 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showContent($categories, $page_content, $user_data, $title)
+function showContent($categories, $page_content, $user_data, $search, $title)
 {
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
         'user_data' => $user_data,
+        'search' => $search,
         'title' => $title
     ]);
     return $show_page;
@@ -129,7 +130,6 @@ function checkUserRated($id, $user_id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    var_dump($res);
     if ($res[0]['cnt'] > 0) {
         return true;
     }

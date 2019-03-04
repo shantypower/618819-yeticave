@@ -16,7 +16,8 @@
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" method="get" action="search.php">
-            <input type="search" name="search" placeholder="Поиск лота">
+        <?php $value = isset($search) ? $search : '';?>
+            <input type="search" name="search" placeholder="Поиск лота" value="<?=$value?>">
             <input class="main-header__search-btn" type="submit" name="find" value="Найти">
         </form>
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
