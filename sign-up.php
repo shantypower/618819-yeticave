@@ -1,8 +1,9 @@
 <?php
-require_once('data.php');
-require('db_connection.php');
-require_once('functions.php');
+require_once('core/data.php');
+require('core/db_connection.php');
+require_once('core/functions.php');
 $categories = getAllCategories($link);
+$user_data['is_auth'] = 0;
 $user = [];
 $errors = [];
 $dict = [];
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (empty($errors)) {
         $res = getUserByEmail($user['email'], $link);
-        if (mysqli_num_rows($res) > 0) {
+        if (count($res) > 0) {
             $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
         } else {
             $password = password_hash($user['password'], PASSWORD_DEFAULT);
@@ -82,4 +83,4 @@ $page_content = include_template('sign-up.php',
         'dict' => $dict
     ]);
 
-print(showContent($categories, $page_content, $is_auth, $user_name, 'Регистрация'));
+print(showContent($categories, $page_content, $user_data, 'Регистрация'));

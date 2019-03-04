@@ -51,8 +51,8 @@
             <span>+ Добавить</span>
         </label>
     </div>
+    <?php if (count($errors) !== 0): ?>
     <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>
-    <?php if (isset($errors)): ?>
         <ul>
             <?php foreach ($errors as $err => $val): ?>
                 <li><strong><?=$dict[$err];?>:</strong><?=' ' . $val;?></li>

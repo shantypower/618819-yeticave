@@ -1,11 +1,18 @@
 <?php
-require_once('data.php');
-require('db_connection.php');
-require_once('functions.php');
+
+include('core/session.php');
+require_once('core/data.php');
+require('core/db_connection.php');
+require_once('core/functions.php');
 $categories = getAllCategories($link);
+if ($user_data['is_auth'] == 0) {
+        $page_content = include_template('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
+        print(showContent($categories, $page_content, $user_data, '403 Доступ запрещен'));
+    exit();
+    }
 
 $top_menu = include_template('menu.php', ['menu' => $categories]);
-$page_content = include_template('add-lot.php', ['top_menu' => $top_menu]);
+$page_content = include_template('add-lot.php', ['top_menu' => $top_menu, 'categories' => $categories]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
 
@@ -70,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $page_content = include_template('add-lot.php',
             [
                 'categories' => $categories,
+                'top_menu' => $top_menu,
                 'lot' => $lot,
                 'errors' => $errors,
                 'dict' => $dict
@@ -77,8 +85,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
         $sql = "INSERT INTO lots (date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
-                VALUES (NOW(), ?, ?, ?, ?, ?, ?, 1, ?);";
-        $stmt = db_get_prepare_stmt($link, $sql, [$lot['lot-name'], $lot['message'], 'img/' . $lot['path'], $lot['lot-rate'], $lot['lot-date'], $lot['lot-step'], $lot['category']]);
+                VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?);";
+        $stmt = db_get_prepare_stmt($link, $sql, [
+            $lot['lot-name'],
+            $lot['message'],
+            'img/' . $lot['path'],
+            $lot['lot-rate'],
+            $lot['lot-date'],
+            $lot['lot-step'],
+            $user_data['id'],
+            $lot['category']
+        ]);
         $res = mysqli_stmt_execute($stmt);
         if ($res) {
             $lot_id = mysqli_insert_id($link);
@@ -93,8 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $content = include_template('layout.php', [
     'content' => $page_content,
     'categories' => $categories,
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
+    'user_data' => $user_data,
     'title' => 'YetiCave - Добавление лота'
 ]);
 print($content);

@@ -22,19 +22,20 @@
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
         <nav class="user-menu">
-            <?php if ($is_auth): ?>
-            <div class="user-menu__logged">
-                <p><?=$user_name;?></p>
-            </div>
+            <?php if ($user_data['is_auth'] == 0): ?>
+            <ul class="user-menu__list">
+                <li class="user-menu__item">
+                    <a href="sign-up.php">Регистрация</a>
+                </li>
+                <li class="user-menu__item">
+                    <a href="login.php">Вход</a>
+                </li>
+            </ul>
                 <?php else:?>
-                <ul class="user-menu__list">
-                    <li class="user-menu__item">
-                        <a href="sign-up.php">Регистрация</a>
-                    </li>
-                    <li class="user-menu__item">
-                        <a href="#">Вход</a>
-                    </li>
-                </ul>
+            <div class="user-menu__logged">
+                <p><?=strip_tags($user_data['user_name']);?></p>
+                <a href="logout.php">Выход</a>
+            </div>
             <?php endif; ?>
         </nav>
     </div>
