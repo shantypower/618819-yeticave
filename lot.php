@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 if (isset($user_data['id'])){
-    $isRate = checkUserRated($id, $link);
+    $isRate = checkUserRated($id, $user_data['id'], $link);
 }
 
 $rates = getRatesForLot($id, $link);

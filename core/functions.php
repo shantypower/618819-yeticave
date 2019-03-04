@@ -120,25 +120,18 @@ function getUserByID($id, $link)
     return $user[0] ?? null;
 }
 
-function checkUserRated($id, $link)
+function checkUserRated($id, $user_id, $link)
 {
-    $sql = 'SELECT user_id, lot_id
+    $sql = 'SELECT count(*) as cnt
           FROM lot_rates
-         WHERE lot_id = ?;';
-    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+         WHERE lot_id = ? AND user_id = ?;';
+    $stmt = db_get_prepare_stmt($link, $sql, [$id, $user_id]);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    if (mysqli_num_rows($result) > 0) {
-        foreach ( $res as $key1 => $item1) {
-            foreach ($item1 as $item2) {
-                $rate = $item1['user_id'];
-                if ($rate == $_SESSION['id']) {
-                    return true;
-                }
-            }
-
-        }
+    var_dump($res);
+    if ($res[0]['cnt'] > 0) {
+        return true;
     }
     return false;
 }
