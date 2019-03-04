@@ -93,3 +93,13 @@ SELECT lr.user_id, lr.lot_id, u.user_name, u.id
   LEFT OUTER JOIN lots l
     ON lr.lot_id = l.id
  WHERE lr.lot_id = 6;
+ /* Поиск лота по названию или описанию */
+ SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+   FROM lots l
+   LEFT OUTER JOIN lot_rates lr
+     ON l.id = lr.lot_id
+   JOIN categories c
+     ON l.cat_id = c.id
+  WHERE MATCH(l.lot_name, l.descr)
+AGAINST(2014)
+GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id;

@@ -152,6 +152,24 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+function siteSearch($search, $link)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+    FROM lots l
+    LEFT OUTER JOIN lot_rates lr
+      ON l.id = lr.lot_id
+    JOIN categories c
+      ON l.cat_id = c.id
+   WHERE MATCH(l.lot_name, l.descr)
+ AGAINST(?)
+ GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
+}
+
 function humanDate($time)
 {
     $lot_time_sec = strtotime($time);
