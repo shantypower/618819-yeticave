@@ -11,9 +11,10 @@ $adverts = getAllLots($link);
 $lot = '';
 $page_content = '';
 $current_price = 0;
-$rates = '';
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
+$rates = getRatesForLot($id, $link);
+$rates_count = count($rates);
 $lot = getLotById($id, $link);
 
 if (!$lot) {
@@ -25,7 +26,7 @@ if (!$lot) {
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $rates = $_POST;
+    $rate = $_POST;
     $required = ['cost'];
     $dict = ['cost' => 'Сумма ставки'];
     $errors = [];
@@ -48,11 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'top_menu' => $top_menu,
             'lot' => $lot,
             'rates' => $rates,
-            'cost' => $rates['cost'],
             'errors' => $errors,
             'dict' => $dict,
             'isRate' => $isRate,
             'user_data' => $user_data,
+            'rates_count' => $rates_count,
             'current_price' => $current_price
         ]);
         print(showContent($categories, $page_content, $user_data, 'Введена неверная цена'));
@@ -74,8 +75,6 @@ if (isset($user_data['id'])){
     $isRate = checkUserRated($id, $user_data['id'], $link);
 }
 
-$rates = getRatesForLot($id, $link);
-$rates_count = count($rates);
 $page_content = include_template('lot.php', [
     'top_menu' => $top_menu,
     'lot' => $lot,
