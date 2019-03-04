@@ -72,12 +72,13 @@ function getAllLots($link)
     return $adverts;
 }
 
-function showContent($categories, $page_content, $user_data, $title)
+function showContent($categories, $page_content, $user_data, $search, $title)
 {
     $show_page = include_template('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
         'user_data' => $user_data,
+        'search' => $search,
         'title' => $title
     ]);
     return $show_page;
@@ -129,7 +130,6 @@ function checkUserRated($id, $user_id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    var_dump($res);
     if ($res[0]['cnt'] > 0) {
         return true;
     }
@@ -150,6 +150,24 @@ function getRatesForLot($id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function siteSearch($search, $link)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+    FROM lots l
+    LEFT OUTER JOIN lot_rates lr
+      ON l.id = lr.lot_id
+    JOIN categories c
+      ON l.cat_id = c.id
+   WHERE MATCH(l.lot_name, l.descr)
+ AGAINST(?)
+ GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
 }
 
 function humanDate($time)

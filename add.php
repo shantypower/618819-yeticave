@@ -4,10 +4,11 @@ include('core/session.php');
 require_once('core/data.php');
 require('core/db_connection.php');
 require_once('core/functions.php');
+$search = '';
 $categories = getAllCategories($link);
 if ($user_data['is_auth'] == 0) {
         $page_content = include_template('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
-        print(showContent($categories, $page_content, $user_data, '403 Доступ запрещен'));
+        print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
     }
 

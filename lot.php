@@ -9,6 +9,7 @@ $categories = getAllCategories($link);
 
 $adverts = getAllLots($link);
 $lot = '';
+$search = '';
 $page_content = '';
 $current_price = 0;
 $top_menu = include_template('menu.php', ['menu' => $categories]);
@@ -20,7 +21,7 @@ $lot = getLotById($id, $link);
 if (!$lot) {
     http_response_code(404);
     $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    print(showContent($categories, $page_content, $user_data, '404 Страница не найдена'));
+    print(showContent($categories, $page_content, $user_data, $search, '404 Страница не найдена'));
 }
 
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
@@ -56,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'rates_count' => $rates_count,
             'current_price' => $current_price
         ]);
-        print(showContent($categories, $page_content, $user_data, 'Введена неверная цена'));
+        print(showContent($categories, $page_content, $user_data, $search, 'Введена неверная цена'));
         return;
     } else {
         $sql = 'INSERT INTO lot_rates (date_add, rate, user_id, lot_id) VALUES (NOW(), ?, ?, ?)';
@@ -67,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: lot.php?id=" . $id);
         } else {
             $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
-            print(showContent($categories, $page_content, $user_data, mysqli_error($link)));
+            print(showContent($categories, $page_content, $user_data, $search, mysqli_error($link)));
         }
     }
 }
@@ -85,4 +86,4 @@ $page_content = include_template('lot.php', [
     'rates_count' => $rates_count,
     'content' => $page_content
 ]);
-print(showContent($categories, $page_content, $user_data, $lot['lot_name']));
+print(showContent($categories, $page_content, $user_data, $search, $lot['lot_name']));

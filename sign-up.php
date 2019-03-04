@@ -7,6 +7,7 @@ $user_data['is_auth'] = 0;
 $user = [];
 $errors = [];
 $dict = [];
+$search = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $_POST;
 
@@ -83,4 +84,4 @@ $page_content = include_template('sign-up.php',
         'dict' => $dict
     ]);
 
-print(showContent($categories, $page_content, $user_data, 'Регистрация'));
+print(showContent($categories, $page_content, $user_data, $search, 'Регистрация'));
