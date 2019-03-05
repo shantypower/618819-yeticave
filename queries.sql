@@ -103,3 +103,15 @@ SELECT lr.user_id, lr.lot_id, u.user_name, u.id
   WHERE MATCH(l.lot_name, l.descr)
 AGAINST(2014)
 GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id;
+
+/* Выборка лотов по категории в порядке убывания по дате*/
+SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+  FROM lots l
+  LEFT OUTER JOIN categories c
+  ON l.cat_id = c.id
+  LEFT OUTER JOIN lot_rates lr
+  ON lr.lot_id = l.id
+ WHERE cat_id = 3
+ GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name
+ ORDER BY date_add
+ DESC;

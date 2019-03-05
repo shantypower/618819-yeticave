@@ -10,24 +10,24 @@ $adverts = [];
 $search = '';
 if ($isConnect == false) {
     $error = mysqli_connect_error();
-    $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $user_data, $search, 'Ошибка'));
+    print(showError($categories, $page_content, $user_data, $search, $error));
     return;
 }
+
 $categories = getAllCategories($link);
-if (count($categories) == 0) {
+if (!$categories) {
     $error = mysqli_error($link);
-    $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $user_data, $search, 'Ошибка'));
+    print(showError($categories, $page_content, $user_data, $search, $error));
     return;
 };
+
 $adverts = getAllLots($link);
-if (count($adverts) == 0) {
+if (!$adverts) {
     $error = mysqli_error($link);
-    $page_content = include_template('error.php', ['error' => $error]);
-    print(showContent($categories, $page_content, $user_data, $search, 'Ошибка'));
+    print(showError($categories, $page_content, $user_data, $search, $error));
     return;
 };
+
 $page_content = include_template('index.php', [
     'categories' => $categories,
     'adverts' => $adverts

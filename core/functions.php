@@ -72,6 +72,13 @@ function getAllLots($link)
     return $adverts;
 }
 
+function showError($categories, $page_content, $user_data, $search, $errorText)
+{
+    $page_content = include_template('error.php', ['error' => $errorText]);
+    return showContent($categories, $page_content, $user_data, $search, 'Не найдено');
+
+}
+
 function showContent($categories, $page_content, $user_data, $search, $title)
 {
     $show_page = include_template('layout.php', [
@@ -82,6 +89,41 @@ function showContent($categories, $page_content, $user_data, $search, $title)
         'title' => $title
     ]);
     return $show_page;
+}
+
+function showPagination($link, $cat, $top_menu)
+{
+    $current_page = 1;
+    if (isset($_GET['page'])) {
+        $current_page = intval($_GET['page']);
+        if ($current_page <= 0 ) {
+            $current_page = 1;
+        }
+    };
+    $page_items = 9;
+    $items_count = getCountOfLotsByCat($link, $cat);
+    $pages_count = ceil($items_count / $page_items);
+    $offset = ($current_page - 1) * $page_items;
+    $pages = range(1, $pages_count);
+
+    $lots = getLotsByCategory($link, $cat, $page_items, $offset);
+    if (!$lots) {
+        return null;
+    }
+
+    $pagination = include_template('pagination.php', [
+        'cat' => $cat,
+        'pages_count' => $pages_count,
+        'current_page' => $current_page,
+        'pages' => $pages
+    ]);
+    $page_content = include_template('all-lots.php', [
+        'top_menu' => $top_menu,
+        'pagination' => $pagination,
+        'top_menu' => $top_menu,
+        'lots' => $lots
+    ]);
+    return $page_content;
 }
 
 function getLotById($id, $link)
@@ -150,6 +192,40 @@ function getRatesForLot($id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function getLotsByCategory($link, $cat, $page_items, $offset)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+              FROM lots l
+              LEFT OUTER JOIN categories c
+                ON l.cat_id = c.id
+              LEFT OUTER JOIN lot_rates lr
+                ON lr.lot_id = l.id
+             WHERE cat_id = ?
+             GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name
+             ORDER BY l.date_add
+              DESC
+              LIMIT ? OFFSET ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cat, $page_items, $offset]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
+}
+
+function getCountOfLotsByCat($link, $cat)
+{
+    $sql= "SELECT COUNT(*)
+               AS cnt
+             FROM lots l
+            WHERE l.cat_id = ?
+              AND l.date_end > CURRENT_DATE()";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cat]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result[0]['cnt'] ?? null;
 }
 
 function siteSearch($search, $link)
