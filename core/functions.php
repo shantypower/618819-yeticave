@@ -72,6 +72,13 @@ function getAllLots($link)
     return $adverts;
 }
 
+function showError($categories, $page_content, $user_data, $search, $errorText)
+{
+    $page_content = include_template('error.php', ['error' => $errorText]);
+    return showContent($categories, $page_content, $user_data, $search, 'Не найдено');
+
+}
+
 function showContent($categories, $page_content, $user_data, $search, $title)
 {
     $show_page = include_template('layout.php', [
@@ -150,6 +157,25 @@ function getRatesForLot($id, $link)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function getLotsByCategory($link, $cat)
+{
+    $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
+              FROM lots l
+              LEFT OUTER JOIN categories c
+                ON l.cat_id = c.id
+              LEFT OUTER JOIN lot_rates lr
+                ON lr.lot_id = l.id
+             WHERE cat_id = ?
+             GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name
+             ORDER BY l.date_add
+              DESC;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cat]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
 }
 
 function siteSearch($search, $link)

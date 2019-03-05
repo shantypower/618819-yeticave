@@ -7,6 +7,11 @@ $categories = getAllCategories($link);
 $adverts = getAllLots($link);
 $errors = [];
 $search = '';
+if ($isConnect == false) {
+    $error = mysqli_connect_error();
+    print(showError($categories, $page_content, $user_data, $search, $error));
+    return;
+}
 $menu = include_template('menu.php', ['menu' => $categories]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $form = $_POST;

@@ -12,6 +12,13 @@ $lot = '';
 $search = '';
 $page_content = '';
 $current_price = 0;
+
+if ($isConnect == false) {
+    $error = mysqli_connect_error();
+    print(showError($categories, $page_content, $user_data, $search, $error));
+    return;
+}
+
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
 $rates = getRatesForLot($id, $link);
@@ -19,9 +26,8 @@ $rates_count = count($rates);
 $lot = getLotById($id, $link);
 
 if (!$lot) {
-    http_response_code(404);
-    $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    print(showContent($categories, $page_content, $user_data, $search, '404 Страница не найдена'));
+    print(showError($categories, $page_content, $user_data, $search,'<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>'));
+    return;
 }
 
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
