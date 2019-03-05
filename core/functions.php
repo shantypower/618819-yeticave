@@ -107,7 +107,6 @@ function showPagination($link, $cat, $top_menu)
     $pages = range(1, $pages_count);
 
     $lots = getLotsByCategory($link, $cat, $page_items, $offset);
-    var_dump($lots);
     if (!$lots) {
         return null;
     }
