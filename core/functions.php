@@ -159,7 +159,7 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function getLotsByCategory($link, $cat)
+function getLotsByCategory($link, $cat, $page_items, $offset)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
               FROM lots l
@@ -170,12 +170,27 @@ function getLotsByCategory($link, $cat)
              WHERE cat_id = ?
              GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name
              ORDER BY l.date_add
-              DESC;";
-    $stmt = db_get_prepare_stmt($link, $sql, [$cat]);
+              DESC
+              LIMIT ? OFFSET ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cat, $page_items, $offset]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
     return $result ?? null;
+}
+
+function getCountOfLotsByCat($link, $cat)
+{
+    $sql= "SELECT COUNT(*)
+               AS cnt
+             FROM lots l
+            WHERE l.cat_id = ?
+              AND l.date_end > CURRENT_DATE()";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cat]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result[0]['cnt'] ?? null;
 }
 
 function siteSearch($search, $link)
