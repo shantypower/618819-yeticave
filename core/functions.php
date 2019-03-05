@@ -91,6 +91,42 @@ function showContent($categories, $page_content, $user_data, $search, $title)
     return $show_page;
 }
 
+function showPagination($link, $cat, $top_menu)
+{
+    $current_page = 1;
+    if (isset($_GET['page'])) {
+        $current_page = intval($_GET['page']);
+        if ($current_page <= 0 ) {
+            $current_page = 1;
+        }
+    };
+    $page_items = 9;
+    $items_count = getCountOfLotsByCat($link, $cat);
+    $pages_count = ceil($items_count / $page_items);
+    $offset = ($current_page - 1) * $page_items;
+    $pages = range(1, $pages_count);
+
+    $lots = getLotsByCategory($link, $cat, $page_items, $offset);
+    var_dump($lots);
+    if (!$lots) {
+        return null;
+    }
+
+    $pagination = include_template('pagination.php', [
+        'cat' => $cat,
+        'pages_count' => $pages_count,
+        'current_page' => $current_page,
+        'pages' => $pages
+    ]);
+    $page_content = include_template('all-lots.php', [
+        'top_menu' => $top_menu,
+        'pagination' => $pagination,
+        'top_menu' => $top_menu,
+        'lots' => $lots
+    ]);
+    return $page_content;
+}
+
 function getLotById($id, $link)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
