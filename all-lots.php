@@ -24,10 +24,10 @@ if (!$categories) {
 
 $top_menu = include_template('menu.php', ['menu' => $categories]);
 $cat = $_GET['category'];
-$page_content = showPagination($link, $cat, $top_menu);
+$page_content = showPaginationCatSearch($link, $cat, $top_menu);
 if (!$page_content) {
     print(showError($categories, $page_content, $user_data, $cat,'<h2>Нет товаров в выбранной категории</h2>'));
     return;
 }
 
-print(showContent($categories, $page_content, $user_data, $search, $cat));
+print(showContent($categories, $page_content, $user_data, $search, 'Товары категории'));

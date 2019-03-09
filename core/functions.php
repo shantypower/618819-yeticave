@@ -91,7 +91,43 @@ function showContent($categories, $page_content, $user_data, $search, $title)
     return $show_page;
 }
 
-function showPagination($link, $cat, $top_menu)
+function showPaginationSiteSearch($link, $search, $top_menu)
+{
+    $current_page = 1;
+    if (isset($_GET['page'])) {
+        $current_page = intval($_GET['page']);
+        if ($current_page <= 0 ) {
+            $current_page = 1;
+        }
+    };
+    $page_items = 9;
+    $offset = ($current_page - 1) * $page_items;
+
+    $items_count = getCountOfLotsBySearch($link, $search, $page_items, $offset);
+    var_dump($items_count);
+    $pages_count = ceil($items_count / $page_items);
+    var_dump($pages_count);
+    $pages = range(1, $pages_count);
+
+
+    $lots = getLotsBySiteSearch($search, $link, $page_items, $offset);
+    var_dump($lots);
+    if (!$lots) {
+        return null;
+    }
+
+    $page_content = include_template('search.php', [
+        'search' => $search,
+        'pages_count' => $pages_count,
+        'current_page' => $current_page,
+        'pages' => $pages,
+        'top_menu' => $top_menu,
+        'lots' => $lots
+    ]);
+    return $page_content;
+}
+
+function showPaginationCatSearch($link, $cat, $top_menu)
 {
     $current_page = 1;
     if (isset($_GET['page'])) {
@@ -111,15 +147,11 @@ function showPagination($link, $cat, $top_menu)
         return null;
     }
 
-    $pagination = include_template('pagination.php', [
+    $page_content = include_template('all-lots.php', [
         'cat' => $cat,
         'pages_count' => $pages_count,
         'current_page' => $current_page,
-        'pages' => $pages
-    ]);
-    $page_content = include_template('all-lots.php', [
-        'top_menu' => $top_menu,
-        'pagination' => $pagination,
+        'pages' => $pages,
         'top_menu' => $top_menu,
         'lots' => $lots
     ]);
@@ -214,21 +246,36 @@ function getLotsByCategory($link, $cat, $page_items, $offset)
     return $result ?? null;
 }
 
-function getCountOfLotsByCat($link, $cat)
+function getCountOfLotsByCat($link, $search)
 {
     $sql= "SELECT COUNT(*)
                AS cnt
              FROM lots l
             WHERE l.cat_id = ?
               AND l.date_end > CURRENT_DATE()";
-    $stmt = db_get_prepare_stmt($link, $sql, [$cat]);
+    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
     return $result[0]['cnt'] ?? null;
 }
 
-function siteSearch($search, $link)
+function getCountOfLotsBySearch($link, $search, $page_items, $offset)
+{
+    $sql= "SELECT COUNT(*)
+               AS cnt
+             FROM lots l
+            WHERE MATCH(l.lot_name, l.descr)
+ AGAINST(?)
+   LIMIT ? OFFSET ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search, $page_items, $offset]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result[0]['cnt'] ?? null;
+}
+
+function getLotsBySiteSearch($search, $link, $page_items, $offset)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
     FROM lots l
@@ -238,8 +285,11 @@ function siteSearch($search, $link)
       ON l.cat_id = c.id
    WHERE MATCH(l.lot_name, l.descr)
  AGAINST(?)
- GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id;";
-    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
+   GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.cat_id
+   ORDER BY l.date_add
+    DESC
+   LIMIT ? OFFSET ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search, $page_items, $offset]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
