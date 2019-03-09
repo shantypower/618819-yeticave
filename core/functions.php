@@ -38,7 +38,7 @@ function lot_lifetime()
     $future_time = date_create('midnight tomorrow');
     $current_time = date_create('now');
     $diff = date_diff($current_time, $future_time);
-    return date_interval_format($diff, "%H:%i");
+    return date_interval_format($diff, "%H:%I");
 }
 
 function check_remaintime($date) {
@@ -104,14 +104,10 @@ function showPaginationSiteSearch($link, $search, $top_menu)
     $offset = ($current_page - 1) * $page_items;
 
     $items_count = getCountOfLotsBySearch($link, $search, $page_items, $offset);
-    var_dump($items_count);
     $pages_count = ceil($items_count / $page_items);
-    var_dump($pages_count);
     $pages = range(1, $pages_count);
 
-
     $lots = getLotsBySiteSearch($search, $link, $page_items, $offset);
-    var_dump($lots);
     if (!$lots) {
         return null;
     }
@@ -322,4 +318,28 @@ function humanDate($time)
         $result = $minutes . ' минут(ы) назад';
     } else $result = date_format(date_create($time), "d.m.y в H:i");
     return $result;
+}
+
+function getUsersRates($link, $user_id)
+{
+    $sql= "SELECT MAX(lr.id) id, MAX(lr.rate) rate, u.contacts,
+                  u.user_name author_name, MAX(lr.date_add) date_add,
+                  c.cat_name, l.winner_id, l.lot_name,
+                  l.img_src, l.id lot_id, l.date_end
+             FROM lot_rates lr
+             JOIN lots l
+               ON lr.lot_id = l.id
+             JOIN categories c
+               ON l.cat_id = c.id
+             JOIN users u
+               ON l.author_id = u.id
+            WHERE lr.user_id = ?
+            GROUP BY lr.lot_id
+            ORDER BY date_add DESC
+            LIMIT 50;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$user_id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
 }

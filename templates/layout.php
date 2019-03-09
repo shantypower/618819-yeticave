@@ -36,6 +36,7 @@
             <div class="user-menu__logged">
                 <p><?=strip_tags($user_data['user_name']);?></p>
                 <a href="logout.php">Выход</a>
+                <a href="my-lots.php">Мои ставки</a>
             </div>
             <?php endif; ?>
         </nav>

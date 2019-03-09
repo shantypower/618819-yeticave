@@ -115,3 +115,19 @@ SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.pric
  GROUP BY l.id, l.lot_name, l.descr, l.start_price, l.img_src, l.price_step, l.author_id, l.date_end, c.cat_name
  ORDER BY date_add
  DESC;
+/* Выборка ставок пользователя */
+SELECT MAX(lr.id) id, MAX(lr.rate) rate, u.contacts,
+                  u.user_name author_name, MAX(lr.date_add) date_add,
+                  c.cat_name, l.winner_id, l.lot_name,
+                  l.img_src, l.id lot_id, l.date_end
+             FROM lot_rates lr
+             JOIN lots l
+               ON lr.lot_id = l.id
+             JOIN categories c
+               ON l.cat_id = c.id
+             JOIN users u
+               ON l.author_id = u.id
+            WHERE lr.user_id = 1
+            GROUP BY lr.lot_id
+            ORDER BY date_add DESC
+            LIMIT 50;
