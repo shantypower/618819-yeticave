@@ -67,11 +67,14 @@ function LotLifetime()
 * @param string $date Дата окончания публикации лота
 * @return boolean Результат в виде значения истина, либо ложь
 */
-function checkRemainTime($date) {
+function checkRemainTime($date)
+{
     $seconds = strtotime($date);
     $seconds_passed = $seconds - strtotime('now');
     $days = floor($seconds_passed / 86400);
-    if ($days > 0) return true;
+    if ($days > 0) {
+        return true;
+    }
     return false;
 }
 
@@ -121,7 +124,6 @@ function showError($categories, $page_content, $user_data, $search, $errorText)
 {
     $page_content = includeTemplate('error.php', ['error' => $errorText]);
     return showContent($categories, $page_content, $user_data, $search, 'Не найдено');
-
 }
 
 /**
@@ -157,7 +159,7 @@ function showPaginationSiteSearch($link, $search, $top_menu)
     $current_page = 1;
     if (isset($_GET['page'])) {
         $current_page = intval($_GET['page']);
-        if ($current_page <= 0 ) {
+        if ($current_page <= 0) {
             $current_page = 1;
         }
     };
@@ -196,7 +198,7 @@ function showPaginationCatSearch($link, $cat, $top_menu)
     $current_page = 1;
     if (isset($_GET['page'])) {
         $current_page = intval($_GET['page']);
-        if ($current_page <= 0 ) {
+        if ($current_page <= 0) {
             $current_page = 1;
         }
     };
@@ -436,11 +438,11 @@ function humanDate($time)
         $hours = floor($secs_passed / 3600);
         if ($hours > 0) {
             $result = $hours . ' часов назад';
-            if (((($hours % 10) == 1 )&&($hours != 11 ))||($hours == 21)) {
+            if (((($hours % 10) == 1)&&($hours != 11))||($hours == 21)) {
                 $result = $hours . ' час назад';
-            } elseif ((($hours > 1 )&&($hours < 5))||(( $hours >= 22)&&( $hours <=23 ))){
+            } elseif ((($hours > 1)&&($hours < 5))||(($hours >= 22)&&($hours <=23))) {
                 $result = $hours . ' часа назад';
-            } elseif (($hours >= 5)&&($hours < 21)){
+            } elseif (($hours >= 5)&&($hours < 21)) {
                 $result = $hours . ' часов назад';
             }
         }
@@ -449,7 +451,9 @@ function humanDate($time)
             $result = $minutes . ' минуту назад';
         }
         $result = $minutes . ' минут(ы) назад';
-    } else $result = date_format(date_create($time), "d.m.y в H:i");
+    } else {
+        $result = date_format(date_create($time), "d.m.y в H:i");
+    }
     return $result;
 }
 
@@ -503,7 +507,7 @@ function getWonLots($link)
             GROUP BY l.id
             ORDER BY l.date_add DESC
             LIMIT 100;";
-    $stmt = db_get_prepare_stmt($link, $sql,[]);
+    $stmt = db_get_prepare_stmt($link, $sql, []);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
