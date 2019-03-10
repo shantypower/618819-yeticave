@@ -23,17 +23,6 @@ if ($search !== '') {
         print(showError($categories, $page_content, $user_data, $search,'<h2>Нет товаров в выбранной категории</h2>'));
         return;
     }
-/*     $lots = siteSearch($search, $link);
-    if (!$lots) {
-        print(showError($categories, $page_content, $user_data, $search,'<h2>Ничего не найдено по вашему запросу</h2>'));
-        return;
-    }
-
-    $page_content = include_template('search.php', [
-        'top_menu' => $top_menu,
-        'lots' => $lots,
-        'search' => $search
-    ]); */
     print(showContent($categories, $page_content, $user_data, $search, 'Результаты поиска'));
     return;
 }

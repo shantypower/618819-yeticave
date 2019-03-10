@@ -32,5 +32,5 @@ $page_content = include_template('index.php', [
     'categories' => $categories,
     'adverts' => $adverts
 ]);
-
+require_once('getwinner.php');
 print(showContent($categories, $page_content, $user_data, $search, 'YetiCave - Главная страница'));

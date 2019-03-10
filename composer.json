@@ -1,0 +1,9 @@
+{
+    "name": "shantypower/yeticave",
+    "description": "Website for trading snowboarding stuff",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    }
+}

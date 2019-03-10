@@ -322,7 +322,7 @@ function humanDate($time)
 
 function getUsersRates($link, $user_id)
 {
-    $sql= "SELECT MAX(lr.id) id, MAX(lr.rate) rate, u.contacts,
+    $sql= "SELECT MAX(lr.id) id, MAX(lr.rate) rate, u.contacts, u.email,
                   u.user_name author_name, MAX(lr.date_add) date_add,
                   c.cat_name, l.winner_id, l.lot_name,
                   l.img_src, l.id lot_id, l.date_end
@@ -342,4 +342,53 @@ function getUsersRates($link, $user_id)
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
     return $result ?? null;
+}
+
+function getWonLots($link)
+{
+    $sql= "SELECT l.id, l.lot_name, GREATEST(IFNULL(MAX(lr.rate),0),l.start_price) price
+             FROM lots l
+             JOIN users u
+               ON u.id = l.author_id
+             JOIN categories c
+               ON c.id = l.cat_id
+             LEFT JOIN lot_rates lr
+               ON lr.lot_id = l.id
+            WHERE l.winner_id
+               IS NULL AND CURRENT_TIMESTAMP > l.date_end AND lr.user_id IS NOT NULL
+            GROUP BY l.id
+            ORDER BY l.date_add DESC
+            LIMIT 100;";
+    $stmt = db_get_prepare_stmt($link, $sql,[]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result ?? null;
+}
+
+function getRateWinner($link, $id)
+{
+    $sql= "SELECT user_id, id
+             FROM lot_rates
+            WHERE lot_id = ?
+            ORDER BY date_add
+             DESC
+            LIMIT 1";
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result[0] ?? null;
+}
+
+function getWinnerContacts($link, $winner)
+{
+    $sql= "SELECT email, user_name, id
+             FROM users
+            WHERE id = ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$winner]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    return $result[0] ?? null;
 }

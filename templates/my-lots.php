@@ -27,7 +27,8 @@
             </div>
             <div>
               <h3 class="rates__title"><a href="lot.php?id=<?=$item['lot_id']?>"><?=$item['lot_name']?></a></h3>
-              <?=$contacts;?>
+              <p><?=$item['contacts']?></p>
+              <p><?=$item['email']?></p>
             </div>
           </td>
           <td class="rates__category">
