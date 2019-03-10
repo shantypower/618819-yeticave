@@ -1,11 +1,23 @@
 <?php
 require_once('core/mysql_helper.php');
+
+/**
+* Форматирует вывод цены - отступы между разрядами
+* @param integer $price Число, которое нужно конверировать
+* @return string Результат в виде строки
+*/
 function price_format($price)
 {
     $price = ceil($price);
     return $price = number_format($price, 0, ' ', ' ');
 }
 
+/**
+* Отрисовывает страницу на основании переданных параметров и шаблона
+* @param string $name Имя файла-шаблона, в которой передаем параметры
+* @param array $data Данные в виде массива вида ключ->значение для подстановки в шаблон
+* @return string Сформированный из шаблона html-код
+*/
 function include_template($name, $data)
 {
     $name = 'templates/' . $name;
@@ -24,6 +36,11 @@ function include_template($name, $data)
     return $result;
 }
 
+/**
+* Устраняет опасные символы в передаваемой строке
+* @param string $str Строка, котороую нужно конверировать
+* @return string Строка, в которые опасные символы заменены аналогами
+*/
 function text_clean($str)
 {
     $text = trim($str);
@@ -33,6 +50,10 @@ function text_clean($str)
     return $text;
 }
 
+/**
+* Возвращает сколько часов и минут осталось до окончания жизни лота (в данном случае до полуночи текущего дня)
+* @return string Результат в виде строки
+*/
 function lot_lifetime()
 {
     $future_time = date_create('midnight tomorrow');
@@ -41,6 +62,11 @@ function lot_lifetime()
     return date_interval_format($diff, "%H:%I");
 }
 
+/**
+* Проверяет дату окончания торгов для лота, чтобы она не была менее суток с момента публикации
+* @param string $date Дата окончания публикации лота
+* @return boolean Результат в виде значения истина, либо ложь
+*/
 function check_remaintime($date) {
     $seconds = strtotime($date);
     $seconds_passed = $seconds - strtotime('now');
@@ -49,6 +75,11 @@ function check_remaintime($date) {
     return false;
 }
 
+/**
+* Получает из БД содержимое таблицы categories
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив
+*/
 function getAllCategories($link)
 {
     $sql = 'SELECT id, cat_name, css_cl FROM categories';
@@ -56,6 +87,11 @@ function getAllCategories($link)
     return $categories;
 }
 
+/**
+* Получает из БД самые новые, открытые лоты в порядке актуальности из таблицы lots
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив
+*/
 function getAllLots($link)
 {
     $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, l.price_step, MAX(lr.rate), c.cat_name
@@ -72,6 +108,15 @@ function getAllLots($link)
     return $adverts;
 }
 
+/**
+* Собирает html-код для показа страницы с ошибкой
+* @param array $categories Ассоциативный массив категорий товаров
+* @param string $page_content Фрагмент html-кода
+* @param array $user_data Данные текущего пользователя
+* @param string $search Строка-запрос из поля поиска
+* @param string $errorText Текст ошибки
+* @return string Сформированный из шаблона html-код
+*/
 function showError($categories, $page_content, $user_data, $search, $errorText)
 {
     $page_content = include_template('error.php', ['error' => $errorText]);
@@ -79,6 +124,15 @@ function showError($categories, $page_content, $user_data, $search, $errorText)
 
 }
 
+/**
+* Собирает html-код для показа страницы
+* @param array $categories Ассоциативный массив категорий товаров
+* @param string $page_content Фрагмент html-кода
+* @param array $user_data Данные текущего пользователя
+* @param string $search Строка-запрос из поля поиска
+* @param string $title Имя страницы
+* @return string Сформированный из шаблона html-код
+*/
 function showContent($categories, $page_content, $user_data, $search, $title)
 {
     $show_page = include_template('layout.php', [
@@ -91,6 +145,13 @@ function showContent($categories, $page_content, $user_data, $search, $title)
     return $show_page;
 }
 
+/**
+* Собирает html-код для показа пагинации на странице для результатов из поля поиска на сайте
+* @param $link mysqli Ресурс соединения
+* @param string $search Строка-запрос из поля поиска
+* @param string $top_menu HTML-код для отрисовки меню категорий
+* @return string Сформированный из шаблона html-код
+*/
 function showPaginationSiteSearch($link, $search, $top_menu)
 {
     $current_page = 1;
@@ -123,6 +184,13 @@ function showPaginationSiteSearch($link, $search, $top_menu)
     return $page_content;
 }
 
+/**
+* Собирает html-код для показа пагинации на странице для результатов поиска по категориям
+* @param $link mysqli Ресурс соединения
+* @param string $cat Уникальный идентификатор категории
+* @param string $top_menu HTML-код для отрисовки меню категорий
+* @return string Сформированный из шаблона html-код
+*/
 function showPaginationCatSearch($link, $cat, $top_menu)
 {
     $current_page = 1;
@@ -154,6 +222,12 @@ function showPaginationCatSearch($link, $cat, $top_menu)
     return $page_content;
 }
 
+/**
+* Получает из БД данные для лота по его id
+* @param integer $id Уникальный идентификатор искомого лота
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getLotById($id, $link)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
@@ -171,6 +245,12 @@ function getLotById($id, $link)
     return $lot[0] ?? null;
 }
 
+/**
+* Получает из БД данные пользователя по его email
+* @param string $user_email Email пользователя
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getUserByEmail($user_email, $link)
 {
     $sql = "SELECT * FROM users WHERE email = ?";
@@ -181,6 +261,12 @@ function getUserByEmail($user_email, $link)
     return $user[0] ?? null;
 }
 
+/**
+* Получает из БД данные пользователя по его id
+* @param integer $id Уникальный идентификатор пользователя
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getUserByID($id, $link)
 {
     $sql = "SELECT * FROM users WHERE id = ?";
@@ -191,6 +277,13 @@ function getUserByID($id, $link)
     return $user[0] ?? null;
 }
 
+/**
+* Проверяет в БД делал ли пользователь ставку для текущего лота
+* @param integer $id Уникальный идентификатор текущего лота
+* @param integer $user_id Уникальный идентификатор пользователя
+* @param $link mysqli Ресурс соединения
+* @return boolean Результат в виде значения истина, либо ложь
+*/
 function checkUserRated($id, $user_id, $link)
 {
     $sql = 'SELECT count(*) as cnt
@@ -206,6 +299,12 @@ function checkUserRated($id, $user_id, $link)
     return false;
 }
 
+/**
+* Получает из БД все ставки для текущего лота
+* @param integer $id Уникальный идентификатор лота
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив
+*/
 function getRatesForLot($id, $link)
 {
     $sql = 'SELECT lr.user_id, lr.rate, lr.date_add, lr.lot_id, u.user_name, u.id
@@ -222,6 +321,14 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+* Получает массив лотов по искомой категории в порядке убывания по дате для вывода на страницу
+* @param $link mysqli Ресурс соединения
+* @param integer $cat Уникальный идентификатор категории
+* @param integer $page_items Количество элементов, которое может быть выведено единовременно на страницу
+* @param integer $offset Смещение выборки
+* @return array Ассоциативный массив при наличии лотов, удовлетворяющим условиям поиска иначе null
+*/
 function getLotsByCategory($link, $cat, $page_items, $offset)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
@@ -242,13 +349,19 @@ function getLotsByCategory($link, $cat, $page_items, $offset)
     return $result ?? null;
 }
 
+/**
+* Получает количество актуальных лотов по искомой категории  для вывода на страницу
+* @param $link mysqli Ресурс соединения
+* @param string $search Уникальный идентификатор категории
+* @return integer Целое число при наличии лотов, удовлетворяющим условиям поиска иначе null
+*/
 function getCountOfLotsByCat($link, $search)
 {
     $sql= "SELECT COUNT(*)
                AS cnt
-             FROM lots l
-            WHERE l.cat_id = ?
-              AND l.date_end > CURRENT_DATE()";
+             FROM lots
+            WHERE cat_id = ?
+              AND date_end > CURRENT_DATE()";
     $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
@@ -256,14 +369,21 @@ function getCountOfLotsByCat($link, $search)
     return $result[0]['cnt'] ?? null;
 }
 
+/**
+* Получает количество лотов, удовлетворяющих запросу в поле поиска по имени или описанию для вывода на страницу
+* @param $link mysqli Ресурс соединения
+* @param string $search Содержимое запроса из поля поиска
+* @param integer $page_items Количество элементов, которое может быть выведено единовременно на страницу
+* @param integer $offset Смещение выборки
+* @return integer целое число при наличии лотов, удовлетворяющим условиям поиска иначе null
+*/
 function getCountOfLotsBySearch($link, $search, $page_items, $offset)
 {
     $sql= "SELECT COUNT(*)
                AS cnt
              FROM lots l
-            WHERE MATCH(l.lot_name, l.descr)
- AGAINST(?)
-   LIMIT ? OFFSET ?;";
+            WHERE MATCH(l.lot_name, l.descr) AGAINST(?)
+            LIMIT ? OFFSET ?;";
     $stmt = db_get_prepare_stmt($link, $sql, [$search, $page_items, $offset]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
@@ -271,6 +391,14 @@ function getCountOfLotsBySearch($link, $search, $page_items, $offset)
     return $result[0]['cnt'] ?? null;
 }
 
+/**
+* Получает массив лотов, удовлетворяющих запросу из поля поиска в порядке убывания по дате для вывода на страницу
+* @param string $search Содержимое запроса из поля поиска
+* @param $link mysqli Ресурс соединения
+* @param integer $page_items Количество элементов, которое может быть выведено единовременно на страницу
+* @param integer $offset Смещение выборки
+* @return array Ассоциативный массив при наличии лотов, удовлетворяющим условиям поиска иначе null
+*/
 function getLotsBySiteSearch($search, $link, $page_items, $offset)
 {
     $sql = "SELECT l.id, l.lot_name, l.descr, l.start_price, l.img_src, MAX(lr.rate), l.price_step, l.author_id, l.date_end, c.cat_name
@@ -292,6 +420,11 @@ function getLotsBySiteSearch($search, $link, $page_items, $offset)
     return $result ?? null;
 }
 
+/**
+* Возвращает в виде строки сообщение о том сколько времени назад была сделана ставка
+* @param string $time Дата ставки в виде строки
+* @return string Результат в виде строки
+*/
 function humanDate($time)
 {
     $lot_time_sec = strtotime($time);
@@ -320,6 +453,12 @@ function humanDate($time)
     return $result;
 }
 
+/**
+* Получает из БД все ставки для текущего пользователя для пока на странице "Мои ставки"
+* @param $link mysqli Ресурс соединения
+* @param integer $user_id Уникальный идентификатор лота
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getUsersRates($link, $user_id)
 {
     $sql= "SELECT MAX(lr.id) id, MAX(lr.rate) rate, u.contacts, u.email,
@@ -344,6 +483,11 @@ function getUsersRates($link, $user_id)
     return $result ?? null;
 }
 
+/**
+* Получает из БД все победившие лоты
+* @param $link mysqli Ресурс соединения
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getWonLots($link)
 {
     $sql= "SELECT l.id, l.lot_name, GREATEST(IFNULL(MAX(lr.rate),0),l.start_price) price
@@ -366,6 +510,12 @@ function getWonLots($link)
     return $result ?? null;
 }
 
+/**
+* Получает из таблицы ставок id пользователя, сделавшего ставку для запрашивемого лота
+* @param $link mysqli Ресурс соединения
+* @param integer $user_id Уникальный идентификатор лота
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getRateWinner($link, $id)
 {
     $sql= "SELECT user_id, id
@@ -381,6 +531,12 @@ function getRateWinner($link, $id)
     return $result[0] ?? null;
 }
 
+/**
+* Получает контактные данные и имя пользователя (победителя лота)
+* @param $link mysqli Ресурс соединения
+* @param integer $winner Уникальный идентификатор пользователя
+* @return array Ассоциативный массив при наличии результата иначе null
+*/
 function getWinnerContacts($link, $winner)
 {
     $sql= "SELECT email, user_name, id
