@@ -26,7 +26,7 @@ $top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $cat = $_GET['category'];
 $page_content = showPaginationCatSearch($link, $cat, $top_menu);
 if (!$page_content) {
-    print(showError($categories, $page_content, $user_data, $cat,'<h2>Нет товаров в выбранной категории</h2>'));
+    print(showError($categories, $page_content, $user_data, $cat, '<h2>Нет товаров в выбранной категории</h2>'));
     return;
 }
 

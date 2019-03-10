@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'name',
         'message'
     ];
-	$dict = [
+    $dict = [
         'email' => 'E-mail',
         'password' => 'Пароль',
         'name' => 'Имя',
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false) {
         $errors['email'] = 'Введите корректный e-mail';
-      }
+    }
     if (isset($_FILES['photo2']['name'])) {
         if (!empty($_FILES['photo2']['name'])) {
             $tmp_name = $_FILES['photo2']['tmp_name'];
@@ -50,8 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
                 $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
             } else {
-                if ($file_type == "image/jpeg") $path = uniqid() . ".jpg";
-                if ($file_type == "image/png") $path = uniqid() . ".png";
+                if ($file_type == "image/jpeg") {
+                    $path = uniqid() . ".jpg";
+                }
+                if ($file_type == "image/png") {
+                    $path = uniqid() . ".png";
+                }
                 move_uploaded_file($tmp_name, 'img/' . $path);
                 $user['path'] = $path;
             }
@@ -80,15 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-
 }
 $menu = includeTemplate('menu.php', ['menu' => $categories]);
-$page_content = includeTemplate('sign-up.php',
+$page_content = includeTemplate(
+    'sign-up.php',
     [
         'top_menu' => $menu,
         'user' => $user,
         'errors' => $errors,
         'dict' => $dict
-    ]);
+    ]
+);
 
 print(showContent($categories, $page_content, $user_data, $search, 'Регистрация'));

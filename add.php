@@ -9,10 +9,10 @@ $page_content = '';
 $categories = getAllCategories($link);
 
 if ($user_data['is_auth'] == 0) {
-        $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
-        print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
+    $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
+    print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
-    }
+}
 
 if ($isConnect == false) {
     $error = mysqli_connect_error();
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'lot-step',
         'lot-date'
     ];
-	$dict = [
+    $dict = [
         'lot-name' => 'Название',
         'category' => 'Категория',
         'message' => 'Описание',
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if ((!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
         $errors['category'] = 'Выберите категорию';
-      }
+    }
     if ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
         $errors['lot-rate'] = 'Введите число больше ноля';
     }
@@ -71,8 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
                 $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
             } else {
-                if ($file_type == "image/jpeg") $path = uniqid() . ".jpg";
-                if ($file_type == "image/png") $path = uniqid() . ".png";
+                if ($file_type == "image/jpeg") {
+                    $path = uniqid() . ".jpg";
+                }
+                if ($file_type == "image/png") {
+                    $path = uniqid() . ".png";
+                }
                 move_uploaded_file($tmp_name, 'img/' . $path);
                 $lot['path'] = $path;
             }
@@ -83,15 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['file'] = 'Вы не загрузили файл';
     }
     if (count($errors)) {
-        $page_content = includeTemplate('add-lot.php',
+        $page_content = includeTemplate(
+            'add-lot.php',
             [
                 'categories' => $categories,
                 'top_menu' => $top_menu,
                 'lot' => $lot,
                 'errors' => $errors,
                 'dict' => $dict
-            ]);
-
+            ]
+        );
     } else {
         $sql = "INSERT INTO lots (date_add, lot_name, descr, img_src, start_price, date_end, price_step, author_id, cat_id)
                 VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -123,4 +128,3 @@ $content = includeTemplate('layout.php', [
     'title' => 'YetiCave - Добавление лота'
 ]);
 print($content);
-

@@ -20,10 +20,10 @@ if ($search !== '') {
     $page_content = showPaginationSiteSearch($link, $search, $top_menu);
 
     if (!$page_content) {
-        print(showError($categories, $page_content, $user_data, $search,'<h2>Нет товаров в выбранной категории</h2>'));
+        print(showError($categories, $page_content, $user_data, $search, '<h2>Нет товаров в выбранной категории</h2>'));
         return;
     }
     print(showContent($categories, $page_content, $user_data, $search, 'Результаты поиска'));
     return;
 }
-print(showError($categories, $page_content, $user_data, $search,'<h2>Ничего не найдено по вашему запросу</h2>'));
+print(showError($categories, $page_content, $user_data, $search, '<h2>Ничего не найдено по вашему запросу</h2>'));

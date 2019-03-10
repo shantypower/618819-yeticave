@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $user = getUserByEmail($form['email'], $link);
     if (!count($errors) && $user) {
-
         if (password_verify($form['password'], $user['user_pass'])) {
             $_SESSION['id'] = $user['id'];
         } else {
@@ -55,8 +54,7 @@ if (isset($_SESSION['id'])) {
         'categories' => $categories,
         'adverts' => $adverts,
         'user_data' => $user_data]);
-}
-else {
+} else {
     $page_content = includeTemplate('login.php', ['top_menu' => $menu]);
 }
 print(showContent($categories, $page_content, $user_data, $search, 'Авторизация'));

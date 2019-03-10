@@ -15,8 +15,8 @@ if ($isConnect == false) {
 
 $win_lots = getWonLots($link);
 
-if(!$win_lots) {
-    print(showError($categories, $page_content, $user_data, $search,'<h2>Победитель не найден</h2>'));
+if (!$win_lots) {
+    print(showError($categories, $page_content, $user_data, $search, '<h2>Победитель не найден</h2>'));
     return;
 }
 foreach ($win_lots as $item) {
@@ -31,7 +31,7 @@ foreach ($win_lots as $item) {
 
     $user_winner= getWinnerContacts($link, $winner);
     $path = '';
-    if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])){
+    if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
         $path = 'http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     }
     $letter = includeTemplate('email.php', [

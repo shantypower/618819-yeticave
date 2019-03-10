@@ -26,7 +26,7 @@ $rates_count = count($rates);
 $lot = getLotById($id, $link);
 
 if (!$lot) {
-    print(showError($categories, $page_content, $user_data, $search,'<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>'));
+    print(showError($categories, $page_content, $user_data, $search, '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>'));
     return;
 }
 
@@ -45,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!is_numeric($_POST['cost'])) {
         $errors['cost'] = 'Сумма ставки должна быть числом';
-    } else if ($_POST['cost'] <= 0) {
+    } elseif ($_POST['cost'] <= 0) {
         $errors['cost'] = 'Сумма ставки должна быть больше нуля';
-    } else if ($_POST['cost'] < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])) {
+    } elseif ($_POST['cost'] < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])) {
         $errors['cost'] = 'Сумма ставки должна быть больше текущей + шаг торгов';
     }
 
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-if (isset($user_data['id'])){
+if (isset($user_data['id'])) {
     $isRate = checkUserRated($id, $user_data['id'], $link);
 }
 

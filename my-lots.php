@@ -21,7 +21,7 @@ if ($isConnect == false) {
 }
 $users_rates = getUsersRates($link, $user_id);
 if (!$users_rates) {
-    print(showError($categories, $page_content, $user_data, $search,'<h2>У Вас нет ставок</h2>'));
+    print(showError($categories, $page_content, $user_data, $search, '<h2>У Вас нет ставок</h2>'));
     return;
 }
 $page_content = includeTemplate('my-lots.php', [
