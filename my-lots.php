@@ -5,7 +5,7 @@ require_once('core/data.php');
 require('core/db_connection.php');
 require_once('core/functions.php');
 $categories = getAllCategories($link);
-$top_menu = include_template('menu.php', ['menu' => $categories]);
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 
 $adverts = getAllLots($link);
 $lot = '';
@@ -24,7 +24,7 @@ if (!$users_rates) {
     print(showError($categories, $page_content, $user_data, $search,'<h2>У Вас нет ставок</h2>'));
     return;
 }
-$page_content = include_template('my-lots.php', [
+$page_content = includeTemplate('my-lots.php', [
     'top_menu' => $top_menu,
     'rates' => $users_rates,
     'user_id' => $user_id,

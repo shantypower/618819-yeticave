@@ -19,7 +19,7 @@ if ($isConnect == false) {
     return;
 }
 
-$top_menu = include_template('menu.php', ['menu' => $categories]);
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
 $rates = getRatesForLot($id, $link);
 $rates_count = count($rates);
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (count($errors)) {
-        $page_content = include_template('lot.php', [
+        $page_content = includeTemplate('lot.php', [
             'top_menu' => $top_menu,
             'lot' => $lot,
             'rates' => $rates,
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($res) {
             header("Location: lot.php?id=" . $id);
         } else {
-            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+            $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
             print(showContent($categories, $page_content, $user_data, $search, mysqli_error($link)));
         }
     }
@@ -82,7 +82,7 @@ if (isset($user_data['id'])){
     $isRate = checkUserRated($id, $user_data['id'], $link);
 }
 
-$page_content = include_template('lot.php', [
+$page_content = includeTemplate('lot.php', [
     'top_menu' => $top_menu,
     'lot' => $lot,
     'isRate' => $isRate,

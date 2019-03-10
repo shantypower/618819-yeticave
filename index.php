@@ -28,7 +28,7 @@ if (!$adverts) {
     return;
 };
 
-$page_content = include_template('index.php', [
+$page_content = includeTemplate('index.php', [
     'categories' => $categories,
     'adverts' => $adverts
 ]);

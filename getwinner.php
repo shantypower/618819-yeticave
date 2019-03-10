@@ -34,7 +34,7 @@ foreach ($win_lots as $item) {
     if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])){
         $path = 'http://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     }
-    $letter = include_template('email.php', [
+    $letter = includeTemplate('email.php', [
         'user_name' => $user_winner['user_name'],
         'lot_name' => $lot_name,
         'lot_id' => $id,

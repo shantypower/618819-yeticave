@@ -9,7 +9,7 @@ $page_content = '';
 $categories = getAllCategories($link);
 
 if ($user_data['is_auth'] == 0) {
-        $page_content = include_template('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
+        $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
         print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
     }
@@ -20,8 +20,8 @@ if ($isConnect == false) {
     return;
 }
 
-$top_menu = include_template('menu.php', ['menu' => $categories]);
-$page_content = include_template('add-lot.php', ['top_menu' => $top_menu, 'categories' => $categories]);
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
+$page_content = includeTemplate('add-lot.php', ['top_menu' => $top_menu, 'categories' => $categories]);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lot = $_POST;
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
         $errors['lot-step'] = 'Введите число больше ноля';
     }
-    if (!check_remaintime($_POST['lot-date'])) {
+    if (!checkRemainTime($_POST['lot-date'])) {
         $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
     }
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['file'] = 'Вы не загрузили файл';
     }
     if (count($errors)) {
-        $page_content = include_template('add-lot.php',
+        $page_content = includeTemplate('add-lot.php',
             [
                 'categories' => $categories,
                 'top_menu' => $top_menu,
@@ -111,12 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             header("Location: lot.php?id=" . $lot_id);
         } else {
-            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+            $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
         }
     }
 }
 
-$content = include_template('layout.php', [
+$content = includeTemplate('layout.php', [
     'content' => $page_content,
     'categories' => $categories,
     'user_data' => $user_data,

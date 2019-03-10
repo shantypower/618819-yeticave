@@ -6,7 +6,7 @@ require_once('core/mysql_helper.php');
 * @param integer $price Число, которое нужно конверировать
 * @return string Результат в виде строки
 */
-function price_format($price)
+function priceFormat($price)
 {
     $price = ceil($price);
     return $price = number_format($price, 0, ' ', ' ');
@@ -18,7 +18,7 @@ function price_format($price)
 * @param array $data Данные в виде массива вида ключ->значение для подстановки в шаблон
 * @return string Сформированный из шаблона html-код
 */
-function include_template($name, $data)
+function includeTemplate($name, $data)
 {
     $name = 'templates/' . $name;
     $result = '';
@@ -41,7 +41,7 @@ function include_template($name, $data)
 * @param string $str Строка, котороую нужно конверировать
 * @return string Строка, в которые опасные символы заменены аналогами
 */
-function text_clean($str)
+function textClean($str)
 {
     $text = trim($str);
     $text = htmlspecialchars($text);
@@ -54,7 +54,7 @@ function text_clean($str)
 * Возвращает сколько часов и минут осталось до окончания жизни лота (в данном случае до полуночи текущего дня)
 * @return string Результат в виде строки
 */
-function lot_lifetime()
+function LotLifetime()
 {
     $future_time = date_create('midnight tomorrow');
     $current_time = date_create('now');
@@ -67,7 +67,7 @@ function lot_lifetime()
 * @param string $date Дата окончания публикации лота
 * @return boolean Результат в виде значения истина, либо ложь
 */
-function check_remaintime($date) {
+function checkRemainTime($date) {
     $seconds = strtotime($date);
     $seconds_passed = $seconds - strtotime('now');
     $days = floor($seconds_passed / 86400);
@@ -119,7 +119,7 @@ function getAllLots($link)
 */
 function showError($categories, $page_content, $user_data, $search, $errorText)
 {
-    $page_content = include_template('error.php', ['error' => $errorText]);
+    $page_content = includeTemplate('error.php', ['error' => $errorText]);
     return showContent($categories, $page_content, $user_data, $search, 'Не найдено');
 
 }
@@ -135,7 +135,7 @@ function showError($categories, $page_content, $user_data, $search, $errorText)
 */
 function showContent($categories, $page_content, $user_data, $search, $title)
 {
-    $show_page = include_template('layout.php', [
+    $show_page = includeTemplate('layout.php', [
         'content' => $page_content,
         'categories' => $categories,
         'user_data' => $user_data,
@@ -173,7 +173,7 @@ function showPaginationSiteSearch($link, $search, $top_menu)
         return null;
     }
 
-    $page_content = include_template('search.php', [
+    $page_content = includeTemplate('search.php', [
         'search' => $search,
         'pages_count' => $pages_count,
         'current_page' => $current_page,
@@ -211,7 +211,7 @@ function showPaginationCatSearch($link, $cat, $top_menu)
         return null;
     }
 
-    $page_content = include_template('all-lots.php', [
+    $page_content = includeTemplate('all-lots.php', [
         'cat' => $cat,
         'pages_count' => $pages_count,
         'current_page' => $current_page,

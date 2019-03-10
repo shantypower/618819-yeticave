@@ -22,7 +22,7 @@ if (!$categories) {
     return;
 };
 
-$top_menu = include_template('menu.php', ['menu' => $categories]);
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $cat = $_GET['category'];
 $page_content = showPaginationCatSearch($link, $cat, $top_menu);
 if (!$page_content) {

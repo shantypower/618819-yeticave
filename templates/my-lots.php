@@ -6,9 +6,9 @@
                 $classname_item = "";
                 $classname_timer = "";
                 $contacts="";
-          if (check_remaintime($item['date_end'])) {
+          if (checkRemainTime($item['date_end'])) {
               $classname_item = "";
-              $value = lot_lifetime();
+              $value = LotLifetime();
               $classname_timer = "timer--finishing";
           } else if (($user_id === $item['winner_id'])) {
               $classname_item = "rates__item--win";
@@ -23,7 +23,7 @@
         <tr class="rates__item <?=$classname_item ?>">
           <td class="rates__info">
             <div class="rates__img">
-              <img src="<?=text_clean($item['img_src'])?>" width="54" height="40" alt="">
+              <img src="<?=textClean($item['img_src'])?>" width="54" height="40" alt="">
             </div>
             <div>
               <h3 class="rates__title"><a href="lot.php?id=<?=$item['lot_id']?>"><?=$item['lot_name']?></a></h3>
@@ -39,7 +39,7 @@
             <div class="timer <?=$classname_timer ?>"><?=$value?></div>
           </td>
           <td class="rates__price">
-            <?=price_format(text_clean($item['rate'])) . ' р.' ?>
+            <?=priceFormat(textClean($item['rate'])) . ' р.' ?>
           </td>
           <td class="rates__time">
             <?=humanDate($item['date_add'])?>

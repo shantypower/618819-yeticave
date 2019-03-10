@@ -76,14 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header("Location: login.php");
                 exit();
             } else {
-                $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+                $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
             }
         }
     }
 
 }
-$menu = include_template('menu.php', ['menu' => $categories]);
-$page_content = include_template('sign-up.php',
+$menu = includeTemplate('menu.php', ['menu' => $categories]);
+$page_content = includeTemplate('sign-up.php',
     [
         'top_menu' => $menu,
         'user' => $user,

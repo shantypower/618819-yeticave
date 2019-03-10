@@ -14,7 +14,7 @@ if ($isConnect == false) {
     return;
 }
 
-$top_menu = include_template('menu.php', ['menu' => $categories]);
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $search = trim($_GET['search'] ?? '');
 if ($search !== '') {
     $page_content = showPaginationSiteSearch($link, $search, $top_menu);
