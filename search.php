@@ -7,22 +7,23 @@ require_once('core/functions.php');
 $categories = getAllCategories($link);
 $page_content = '';
 $lots = [];
-$top_menu = include_template('menu.php', ['menu' => $categories]);
-$search = $_GET['search'] ?? '';
-if ($search) {
-    $lots = siteSearch($search, $link);
-    if (count($lots) > 0) {
-        $page_content = include_template('search.php', [
-            'top_menu' => $top_menu,
-            'lots' => $lots,
-            'search' => $search
-        ]);
-        print(showContent($categories, $page_content, $user_data, $search, 'Результаты поиска'));
+$search = '';
+if ($isConnect == false) {
+    $error = mysqli_connect_error();
+    print(showError($categories, $page_content, $user_data, $search, $error));
+    return;
+}
+
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
+$search = trim($_GET['search'] ?? '');
+if ($search !== '') {
+    $page_content = showPaginationSiteSearch($link, $search, $top_menu);
+
+    if (!$page_content) {
+        print(showError($categories, $page_content, $user_data, $search, '<h2>Нет товаров в выбранной категории</h2>'));
         return;
     }
-    $page_content = include_template('error.php', [
-        'top_menu' => $top_menu,
-        'error' => 'Ничего не найдено по вашему запросу'
-    ]);
-    print(showContent($categories, $page_content, $user_data, $search, 'Ничего не найдено'));
+    print(showContent($categories, $page_content, $user_data, $search, 'Результаты поиска'));
+    return;
 }
+print(showError($categories, $page_content, $user_data, $search, '<h2>Ничего не найдено по вашему запросу</h2>'));

@@ -14,7 +14,7 @@ CREATE TABLE lots (
   descr CHAR(200) NOT NULL,
   img_src TEXT NOT NULL,
   start_price INT NOT NULL,
-  date_end TIMESTAMP NOT NULL,
+  date_end TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   price_step INT NOT NULL,
   author_id INT,
   winner_id INT,

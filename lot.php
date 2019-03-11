@@ -12,16 +12,22 @@ $lot = '';
 $search = '';
 $page_content = '';
 $current_price = 0;
-$top_menu = include_template('menu.php', ['menu' => $categories]);
+
+if ($isConnect == false) {
+    $error = mysqli_connect_error();
+    print(showError($categories, $page_content, $user_data, $search, $error));
+    return;
+}
+
+$top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $id = (int)$_GET['id'];
 $rates = getRatesForLot($id, $link);
 $rates_count = count($rates);
 $lot = getLotById($id, $link);
 
 if (!$lot) {
-    http_response_code(404);
-    $page_content = include_template('error.php', ['error' => '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>']);
-    print(showContent($categories, $page_content, $user_data, $search, '404 Страница не найдена'));
+    print(showError($categories, $page_content, $user_data, $search, '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>'));
+    return;
 }
 
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
@@ -39,14 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!is_numeric($_POST['cost'])) {
         $errors['cost'] = 'Сумма ставки должна быть числом';
-    } else if ($_POST['cost'] <= 0) {
+    } elseif ($_POST['cost'] <= 0) {
         $errors['cost'] = 'Сумма ставки должна быть больше нуля';
-    } else if ($_POST['cost'] < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])) {
+    } elseif ($_POST['cost'] < ($lot['MAX(lr.rate)'] + $lot['start_price'] + $lot['price_step'])) {
         $errors['cost'] = 'Сумма ставки должна быть больше текущей + шаг торгов';
     }
 
     if (count($errors)) {
-        $page_content = include_template('lot.php', [
+        $page_content = includeTemplate('lot.php', [
             'top_menu' => $top_menu,
             'lot' => $lot,
             'rates' => $rates,
@@ -67,16 +73,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($res) {
             header("Location: lot.php?id=" . $id);
         } else {
-            $page_content = include_template('error.php', ['error' => mysqli_error($link)]);
+            $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
             print(showContent($categories, $page_content, $user_data, $search, mysqli_error($link)));
         }
     }
 }
-if (isset($user_data['id'])){
+if (isset($user_data['id'])) {
     $isRate = checkUserRated($id, $user_data['id'], $link);
 }
 
-$page_content = include_template('lot.php', [
+$page_content = includeTemplate('lot.php', [
     'top_menu' => $top_menu,
     'lot' => $lot,
     'isRate' => $isRate,

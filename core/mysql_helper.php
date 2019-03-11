@@ -9,7 +9,8 @@
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt($link, $sql, $data = [])
+{
     $stmt = mysqli_prepare($link, $sql);
 
     if ($data) {
@@ -21,11 +22,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
             if (is_int($value)) {
                 $type = 'i';
-            }
-            else if (is_string($value)) {
+            } elseif (is_string($value)) {
                 $type = 's';
-            }
-            else if (is_double($value)) {
+            } elseif (is_double($value)) {
                 $type = 'd';
             }
 
@@ -51,7 +50,7 @@ function db_fetch_data($link, $sql, $data = [])
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     if ($res) {
-    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
     }
     return $result;
 }

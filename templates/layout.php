@@ -36,6 +36,7 @@
             <div class="user-menu__logged">
                 <p><?=strip_tags($user_data['user_name']);?></p>
                 <a href="logout.php">Выход</a>
+                <a href="my-lots.php">Мои ставки</a>
             </div>
             <?php endif; ?>
         </nav>
@@ -51,7 +52,7 @@
         <ul class="nav__list container">
             <?php foreach ($categories as $key => $value): ?>
             <li class="nav__item">
-                <a href="pages/all-lots.html"><?=$value['cat_name']?></a>
+                <a href="all-lots.php?category=<?=strip_tags($value['id'])?>"><?=$value['cat_name']?></a>
             </li>
             <?php endforeach?>
         </ul>
