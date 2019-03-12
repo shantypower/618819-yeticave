@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $user = getUserByEmail($form['email'], $link);
             if (!count($errors) && $user) {
-                if (password_verify($form['password'], $user['user_pass'])) {
-                    $_SESSION['id'] = $user['id'];
+                if (password_verify($form['password'], $user[0]['user_pass'])) {
+                    $_SESSION['id'] = $user[0]['id'];
                 } else {
                     $errors['password'] = 'Вы ввели неверный пароль';
                 }
