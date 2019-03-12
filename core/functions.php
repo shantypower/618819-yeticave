@@ -477,25 +477,44 @@ function humanDate($time)
     if ($days == 0) {
         $hours = floor($secs_passed / 3600);
         if ($hours > 0) {
-            $result = $hours . ' часов назад';
-            if (((($hours % 10) == 1)&&($hours != 11))||($hours == 21)) {
-                $result = $hours . ' час назад';
-            } elseif ((($hours > 1)&&($hours < 5))||(($hours >= 22)&&($hours <=23))) {
-                $result = $hours . ' часа назад';
-            } elseif (($hours >= 5)&&($hours < 21)) {
-                $result = $hours . ' часов назад';
-            }
+            $result = $hours . ' ' . plural($hours, 'час', 'часа', 'часов' );
+        } else {
+            $minutes = floor(($secs_passed % 3600)/60);
+            $result = $minutes . ' ' . plural($minutes, 'минуту', 'минуты', 'минут');
         }
-        $minutes = floor(($secs_passed % 3600)/60);
-        if ((($minutes % 10) == 1)&&($minutes != 11)) {
-            $result = $minutes . ' минуту назад';
-        }
-        $result = $minutes . ' минут(ы) назад';
+        $result .=' назад';
     } else {
         $result = date_format(date_create($time), "d.m.y в H:i");
     }
     return $result;
 }
+
+/**
+ * Склонение числительных (для русского языка)
+ *
+ * Принимает число и выбирает соответствующее склонение числительного. Всего 3 варианта, которые
+ * соответствуют числам 1, 2 и 5.
+ * @param int $number
+ * @param string $one
+ * @param string $two
+ * @param string $five
+ * @return string
+ */
+function plural($number, $one, $two, $five)
+{
+	if (($number - $number % 10) % 100 != 10) {
+		if ($number % 10 == 1) {
+			$result = $one;
+		} elseif ($number % 10 >= 2 && $number % 10 <= 4) {
+			$result = $two;
+		} else {
+			$result = $five;
+		}
+	} else {
+		$result = $five;
+	}
+	return $result;
+};
 
 /**
 * Получает из БД все ставки для текущего пользователя для пока на странице "Мои ставки"
