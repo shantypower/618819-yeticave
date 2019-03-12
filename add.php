@@ -8,7 +8,7 @@ $categories = [];
 $page_content = '';
 $categories = getAllCategories($link);
 
-if (!isset($_SESSION['id']) && $user_data['is_auth'] === 0) {
+if ($user_data['is_auth'] === 0) {
     $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
     print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
