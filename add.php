@@ -49,13 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if (isset($_POST['category']) && (!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
+    if (isset($_POST['category']) && ((!is_numeric($_POST['category']))||($_POST['category'] <= 0))) {
         $errors['category'] = 'Выберите категорию';
     }
-    if (isset($_POST['lot-rate']) && (!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
+    if (isset($_POST['lot-rate']) && ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0))) {
         $errors['lot-rate'] = 'Введите число больше ноля';
     }
-    if (isset($_POST['lot-step']) && (!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
+    if (isset($_POST['lot-step']) && ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0))) {
         $errors['lot-step'] = 'Введите число больше ноля';
     }
     if (isset($_POST['lot-date']) && !empty($_POST['lot-date']) && !checkRemainTime($_POST['lot-date'])) {
