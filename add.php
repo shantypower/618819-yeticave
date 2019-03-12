@@ -61,29 +61,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
     }
 
-    if (isset($_FILES['photo2']['name'])) {
-        if (!empty($_FILES['photo2']['name'])) {
-            $tmp_name = $_FILES['photo2']['tmp_name'];
-            $path = $_FILES['photo2']['name'];
+    if (isset($_FILES['photo2']['name']) && !empty($_FILES['photo2']['name'])) {
+        $tmp_name = $_FILES['photo2']['tmp_name'];
+        $path = $_FILES['photo2']['name'];
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-            if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
-                $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
-            }
-            switch ($file_type) {
-                case "image/jpeg":
-                    $path = uniqid() . ".jpg";
-                    break;
-                case "image/png":
-                    $path = uniqid() . ".png";
-                    break;
-            }
-            move_uploaded_file($tmp_name, 'img/' . $path);
-            $lot['path'] = $path;
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
+            $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
         }
-        //$errors['file'] = 'Вы не загрузили файл';
+        switch ($file_type) {
+            case "image/jpeg":
+                $path = uniqid() . ".jpg";
+                break;
+            case "image/png":
+                $path = uniqid() . ".png";
+                break;
+        }
+        move_uploaded_file($tmp_name, 'img/' . $path);
+        $lot['path'] = $path;
+        var_dump($lot['path']);
+    } else {
+        $errors['file'] = 'Вы не загрузили файл';
     }
+
 
     if (count($errors)) {
         $page_content = includeTemplate(
