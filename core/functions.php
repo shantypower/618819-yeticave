@@ -323,6 +323,11 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+function checkIsCategoryExist()
+{
+    
+}
+
 /**
 * Получает массив лотов по искомой категории в порядке убывания по дате для вывода на страницу
 * @param $link mysqli Ресурс соединения

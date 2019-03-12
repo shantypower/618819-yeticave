@@ -16,7 +16,7 @@
         <h2>Открытые лоты</h2>
     </div>
     <ul class="lots__list">
-        <?php if (isset($adverts)) {?>
+        <?php if (isset($adverts)) :?>
             <?php foreach ($adverts as $key => $item):?>
         <li class="lots__item lot">
             <div class="lot__image">
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </li>
-        <?php endforeach?>
-        <?}?>
+        <?php endforeach; ?>
+        <?php endif;?>
     </ul>
 </section>
