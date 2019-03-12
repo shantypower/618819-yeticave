@@ -345,6 +345,25 @@ function checkIsCategoryExist($link, $id)
 }
 
 /**
+* Возвращает в виде строки путь к загруженному файлу
+* @param string $file_type тип файла
+* @return string Результат в виде строки
+*/
+function setPathName($file_type)
+{
+    switch ($file_type) {
+        case "image/jpeg":
+            $path = uniqid() . ".jpg";
+            return $path;
+            break;
+        case "image/png":
+            $path = uniqid() . ".png";
+            return $path;
+            break;
+    }
+}
+
+/**
 * Получает массив лотов по искомой категории в порядке убывания по дате для вывода на страницу
 * @param $link mysqli Ресурс соединения
 * @param integer $cat Уникальный идентификатор категории

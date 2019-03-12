@@ -70,17 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
             $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
         }
-        switch ($file_type) {
-            case "image/jpeg":
-                $path = uniqid() . ".jpg";
-                break;
-            case "image/png":
-                $path = uniqid() . ".png";
-                break;
+        $path = setPathName($file_type);
+        if ($path) {
+            move_uploaded_file($tmp_name, 'img/' . $path);
+            $lot['path'] = $path;
         }
-        move_uploaded_file($tmp_name, 'img/' . $path);
-        $lot['path'] = $path;
-        var_dump($lot['path']);
     } else {
         $errors['file'] = 'Вы не загрузили файл';
     }
