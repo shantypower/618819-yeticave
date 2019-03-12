@@ -8,7 +8,7 @@ $categories = [];
 $page_content = '';
 $categories = getAllCategories($link);
 
-if ($user_data['is_auth'] == 0) {
+if ($user_data['is_auth'] === 0) {
     $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
     print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
@@ -48,44 +48,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-    if ((!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
+
+    if (isset($_POST['category']) && ((!is_numeric($_POST['category']))||($_POST['category'] <= 0))) {
         $errors['category'] = 'Выберите категорию';
     }
-    if ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
+    if (isset($_POST['lot-rate']) && ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0))) {
         $errors['lot-rate'] = 'Введите число больше ноля';
     }
-    if ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
+    if (isset($_POST['lot-step']) && ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0))) {
         $errors['lot-step'] = 'Введите число больше ноля';
     }
-    if (!checkRemainTime($_POST['lot-date'])) {
+    if (isset($_POST['lot-date']) && !empty($_POST['lot-date']) && !checkRemainTime($_POST['lot-date'])) {
         $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
     }
 
-    if (isset($_FILES['photo2']['name'])) {
-        if (!empty($_FILES['photo2']['name'])) {
-            $tmp_name = $_FILES['photo2']['tmp_name'];
-            $path = $_FILES['photo2']['name'];
+    if (isset($_FILES['photo2']['name']) && !empty($_FILES['photo2']['name'])) {
+        $tmp_name = $_FILES['photo2']['tmp_name'];
+        $path = $_FILES['photo2']['name'];
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-            if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
-                $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
-            } else {
-                if ($file_type == "image/jpeg") {
-                    $path = uniqid() . ".jpg";
-                }
-                if ($file_type == "image/png") {
-                    $path = uniqid() . ".png";
-                }
-                move_uploaded_file($tmp_name, 'img/' . $path);
-                $lot['path'] = $path;
-            }
-        } else {
-            $errors['file'] = 'Вы не загрузили файл';
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
+            $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
+        }
+        $path = setPathName($file_type);
+        if ($path) {
+            move_uploaded_file($tmp_name, 'img/' . $path);
+            $lot['path'] = $path;
         }
     } else {
         $errors['file'] = 'Вы не загрузили файл';
     }
+
+
     if (count($errors)) {
         $page_content = includeTemplate(
             'add-lot.php',
@@ -115,9 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $lot_id = mysqli_insert_id($link);
 
             header("Location: lot.php?id=" . $lot_id);
-        } else {
-            $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
         }
+        $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
     }
 }
 

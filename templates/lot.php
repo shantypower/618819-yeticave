@@ -11,7 +11,9 @@
         </div>
         <div class="lot-item__right">
             <div class="lot-item__state">
-                <div class="lot-item__timer timer"><?=LotLifetime()?></div>
+                <?php if ($lot['date_end'] > date("Y-m-d H:i:s")): ?>
+                    <div class="lot-item__timer timer"><?=LotLifetime();?></div>
+                <?php endif; ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
@@ -22,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <?php if ($user_data['is_auth'] == 1 && ($user_data['id'] !== $lot['author_id']) && ($lot['date_end'] < date_create('now')) && !$isRate): ?>
+            <?php if ($user_data['is_auth'] == 1 && ($user_data['id'] !== $lot['author_id']) && ($lot['date_end'] > date("Y-m-d H:i:s")) && !$isRate): ?>
             <form class="lot-item__form" action="lot.php?id=<?=$lot['id'];?>" method="post">
                 <?php $classname = isset($errors['cost']) ? "form__item--invalid" : "";
                 $value = isset($lot['cost']) ? $lot['cost'] : "";
@@ -40,7 +42,7 @@
                 <table class="history__list">
                     <?php foreach ($rates as $item): ?>
                         <tr class="history__item">
-                            <td class="history__name"><?=$item['user_name'] ?></td>
+                            <td class="history__name"><?=textClean($item['user_name']) ?></td>
                             <td class="history__price"><?=textClean($item['rate'])?></td>
                             <td class="history__time"><?=textClean(humanDate($item['date_add'])) ?></td>
                         </tr>

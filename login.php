@@ -26,28 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-    if (filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
+
+    if (!empty($form['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
         $errors['email'] = 'Введите корректный e-mail';
     }
-    $user = getUserByEmail($form['email'], $link);
-    if (!count($errors) && $user) {
-        if (password_verify($form['password'], $user['user_pass'])) {
-            $_SESSION['id'] = $user['id'];
-        } else {
-            $errors['password'] = 'Вы ввели неверный пароль';
+
+    if (!count($errors)) {
+        $user = getUserByEmail($form['email'], $link);
+        if ($user && password_verify($form['password'], $user[0]['user_pass'])) {
+            $_SESSION['id'] = $user[0]['id'];
+            $user_data['is_auth'] = 1;
+            header("Location: /index.php");
+            exit();
         }
-    } else {
-        $errors['email'] = 'Пользователь с таким e-mail не найден';
+        $errors['password'] = 'Вы ввели неверный пароль';
+        if (!$user) {
+            $errors['email'] = 'Пользователь с таким e-mail не найден';
+        }
     }
-    if (count($errors)) {
-        $page_content = includeTemplate('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
-        print(showContent($categories, $page_content, $user_data, $search, 'Ошибка входа'));
-        return;
-    } else {
-        $user_data['is_auth'] = 1;
-        header("Location: /index.php");
-        exit();
-    }
+
+$page_content = includeTemplate('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
+print(showContent($categories, $page_content, $user_data, $search, 'Ошибка входа'));
+return;
 }
 if (isset($_SESSION['id'])) {
     $page_content = includeTemplate('index.php', [

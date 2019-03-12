@@ -5,6 +5,7 @@ require_once('core/functions.php');
 $categories = getAllCategories($link);
 $user_data['is_auth'] = 0;
 $user = [];
+
 $errors = [];
 $dict = [];
 $search = '';
@@ -57,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $path = uniqid() . ".png";
                 }
                 move_uploaded_file($tmp_name, 'img/' . $path);
-                $user['path'] = $path;
+                if (isset($user['path'])) {
+                    $user['path'] = $path;
+                }
             }
-        } else {
-            $errors['file'] = 'Вы не загрузили файл';
         }
-    } else {
-        $errors['file'] = 'Вы не загрузили файл';
+
+        $user['path'] = '';
     }
     if (empty($errors)) {
         $res = getUserByEmail($user['email'], $link);
@@ -85,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+$user['path'] = '';
 $menu = includeTemplate('menu.php', ['menu' => $categories]);
 $page_content = includeTemplate(
     'sign-up.php',

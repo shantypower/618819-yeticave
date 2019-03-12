@@ -1,6 +1,6 @@
 <nav class="nav"><?=$top_menu; ?></nav>
 <?php $classname = isset($errors) ? "form--invalid" : "";?>
-<form class="form container <?=$classname?>" action="login.php" method="post"> <!-- form--invalid -->
+<form class="form container <?=$classname?>" action="login.php" method="post">
     <h2>Вход</h2>
     <?php $classname = isset($errors['email']) ? "form__item--invalid" : "";
     $value = isset($form['email']) ? $form['email'] : "";
