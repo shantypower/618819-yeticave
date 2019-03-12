@@ -15,7 +15,9 @@
                         <span class="lot__amount"><?=priceFormat(textClean($item['MAX(lr.rate)'] + $item['start_price'])).' &#8381;'?></span>
                         <span class="lot__cost"><?=priceFormat(textClean($item['MAX(lr.rate)'] + $item['start_price'] + $item['price_step']))?><b class="rub">р</b></span>
                     </div>
+                    <?php if ($item['date_end'] > date("Y-m-d H:i:s")): ?>
                     <div class="lot__timer timer"><?=LotLifetime()?></div>
+                    <?php endif;?>
                 </div>
             </div>
         </li>

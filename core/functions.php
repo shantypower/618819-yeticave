@@ -166,7 +166,7 @@ function showPaginationSiteSearch($link, $search, $top_menu)
     $page_items = 9;
     $offset = ($current_page - 1) * $page_items;
 
-    $items_count = getCountOfLotsBySearch($link, $search, $page_items, $offset);
+    $items_count = getCountOfLotsBySearch($link, $search);
     $pages_count = ceil($items_count / $page_items);
     $pages = range(1, $pages_count);
 
@@ -260,7 +260,7 @@ function getUserByEmail($user_email, $link)
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    return $user[0] ?? null;
+    return $user ?? null;
 }
 
 /**
@@ -324,6 +324,46 @@ function getRatesForLot($id, $link)
 }
 
 /**
+* Проверяет в БД существование категории с запрашиваемым id
+* @param $link mysqli Ресурс соединения
+* @param integer $id Уникальный идентификатор категории
+* @return boolean Результат в виде значения истина, либо ложь
+*/
+function checkIsCategoryExist($link, $id)
+{
+    $sql = "SELECT id
+             FROM categories
+            WHERE id = ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    if (!$result) {
+        return false;
+    }
+    return true;
+}
+
+/**
+* Возвращает в виде строки путь к загруженному файлу
+* @param string $file_type тип файла
+* @return string Результат в виде строки
+*/
+function setPathName($file_type)
+{
+    switch ($file_type) {
+        case "image/jpeg":
+            $path = uniqid() . ".jpg";
+            return $path;
+            break;
+        case "image/png":
+            $path = uniqid() . ".png";
+            return $path;
+            break;
+    }
+}
+
+/**
 * Получает массив лотов по искомой категории в порядке убывания по дате для вывода на страницу
 * @param $link mysqli Ресурс соединения
 * @param integer $cat Уникальный идентификатор категории
@@ -379,14 +419,13 @@ function getCountOfLotsByCat($link, $search)
 * @param integer $offset Смещение выборки
 * @return integer целое число при наличии лотов, удовлетворяющим условиям поиска иначе null
 */
-function getCountOfLotsBySearch($link, $search, $page_items, $offset)
+function getCountOfLotsBySearch($link, $search)
 {
     $sql= "SELECT COUNT(*)
                AS cnt
              FROM lots l
-            WHERE MATCH(l.lot_name, l.descr) AGAINST(?)
-            LIMIT ? OFFSET ?;";
-    $stmt = db_get_prepare_stmt($link, $sql, [$search, $page_items, $offset]);
+            WHERE MATCH(l.lot_name, l.descr) AGAINST(?)";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
@@ -437,25 +476,44 @@ function humanDate($time)
     if ($days == 0) {
         $hours = floor($secs_passed / 3600);
         if ($hours > 0) {
-            $result = $hours . ' часов назад';
-            if (((($hours % 10) == 1)&&($hours != 11))||($hours == 21)) {
-                $result = $hours . ' час назад';
-            } elseif ((($hours > 1)&&($hours < 5))||(($hours >= 22)&&($hours <=23))) {
-                $result = $hours . ' часа назад';
-            } elseif (($hours >= 5)&&($hours < 21)) {
-                $result = $hours . ' часов назад';
-            }
+            $result = $hours . ' ' . plural($hours, 'час', 'часа', 'часов' );
+        } else {
+            $minutes = floor(($secs_passed % 3600)/60);
+            $result = $minutes . ' ' . plural($minutes, 'минуту', 'минуты', 'минут');
         }
-        $minutes = floor(($secs_passed % 3600)/60);
-        if ((($minutes % 10) == 1)&&($minutes != 11)) {
-            $result = $minutes . ' минуту назад';
-        }
-        $result = $minutes . ' минут(ы) назад';
+        $result .=' назад';
     } else {
         $result = date_format(date_create($time), "d.m.y в H:i");
     }
     return $result;
 }
+
+/**
+ * Склонение числительных (для русского языка)
+ *
+ * Принимает число и выбирает соответствующее склонение числительного. Всего 3 варианта, которые
+ * соответствуют числам 1, 2 и 5.
+ * @param int $number
+ * @param string $one
+ * @param string $two
+ * @param string $five
+ * @return string
+ */
+function plural($number, $one, $two, $five)
+{
+	if (($number - $number % 10) % 100 != 10) {
+		if ($number % 10 == 1) {
+			$result = $one;
+		} elseif ($number % 10 >= 2 && $number % 10 <= 4) {
+			$result = $two;
+		} else {
+			$result = $five;
+		}
+	} else {
+		$result = $five;
+	}
+	return $result;
+};
 
 /**
 * Получает из БД все ставки для текущего пользователя для пока на странице "Мои ставки"
