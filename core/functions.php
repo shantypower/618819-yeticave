@@ -323,9 +323,19 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function checkIsCategoryExist()
+function checkIsCategoryExist($link, $id)
 {
-    
+    $sql = "SELECT id
+             FROM categories
+            WHERE id = ?;";
+    $stmt = db_get_prepare_stmt($link, $sql, [$id]);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    if (!$result) {
+        return false;
+    }
+    return true;
 }
 
 /**
