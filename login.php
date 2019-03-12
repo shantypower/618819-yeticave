@@ -29,15 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $errors['email'] = 'Введите корректный e-mail';
             } else {
                 $user = getUserByEmail($form['email'], $link);
-            if (!count($errors) && $user) {
-                if (password_verify($form['password'], $user[0]['user_pass'])) {
-                    $_SESSION['id'] = $user[0]['id'];
+                if (!count($errors) && $user) {
+                    if (password_verify($form['password'], $user[0]['user_pass'])) {
+                        $_SESSION['id'] = $user[0]['id'];
+                    } else {
+                        $errors['password'] = 'Вы ввели неверный пароль';
+                    }
                 } else {
-                    $errors['password'] = 'Вы ввели неверный пароль';
+                    $errors['email'] = 'Пользователь с таким e-mail не найден';
                 }
-            } else {
-                $errors['email'] = 'Пользователь с таким e-mail не найден';
-            }
             }
         }
     }
