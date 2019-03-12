@@ -260,7 +260,7 @@ function getUserByEmail($user_email, $link)
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    return $user[0] ?? null;
+    return $user ?? null;
 }
 
 /**
