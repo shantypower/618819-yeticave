@@ -14,7 +14,7 @@
 <section class="lots">
     <div class="lots__header">
         <h2>Открытые лоты</h2>
-    </div>
+    </div><!--  -->
     <ul class="lots__list">
         <?php if (isset($adverts)) :?>
             <?php foreach ($adverts as $key => $item):?>

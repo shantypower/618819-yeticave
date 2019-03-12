@@ -323,6 +323,12 @@ function getRatesForLot($id, $link)
     return $res = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+* Проверяет в БД существование категории с запрашиваемым id
+* @param $link mysqli Ресурс соединения
+* @param integer $id Уникальный идентификатор категории
+* @return boolean Результат в виде значения истина, либо ложь
+*/
 function checkIsCategoryExist($link, $id)
 {
     $sql = "SELECT id

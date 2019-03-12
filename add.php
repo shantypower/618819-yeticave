@@ -46,44 +46,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
-        } else {
-            if ((!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
-                $errors['category'] = 'Выберите категорию';
-            }
-            if ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
-                $errors['lot-rate'] = 'Введите число больше ноля';
-            }
-            if ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
-                $errors['lot-step'] = 'Введите число больше ноля';
-            }
-            if (!checkRemainTime($_POST['lot-date'])) {
-                $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
-            }
-
-            if (isset($_FILES['photo2']['name'])) {
-                if (!empty($_FILES['photo2']['name'])) {
-                    $tmp_name = $_FILES['photo2']['tmp_name'];
-                    $path = $_FILES['photo2']['name'];
-
-                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                    $file_type = finfo_file($finfo, $tmp_name);
-                    if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
-                        $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
-                    }
-                    switch ($file_type) {
-                        case "image/jpeg":
-                            $path = uniqid() . ".jpg";
-                            break;
-                        case "image/png":
-                            $path = uniqid() . ".png";
-                            break;
-                    }
-                    move_uploaded_file($tmp_name, 'img/' . $path);
-                    $lot['path'] = $path;
-                }
-                $errors['file'] = 'Вы не загрузили файл';
-            }
         }
+    }
+    if ((!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
+        $errors['category'] = 'Выберите категорию';
+    }
+    if ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
+        $errors['lot-rate'] = 'Введите число больше ноля';
+    }
+    if ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
+        $errors['lot-step'] = 'Введите число больше ноля';
+    }
+    if (!empty($_POST['lot-date']) && !checkRemainTime($_POST['lot-date'])) {
+        $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
+    }
+
+    if (isset($_FILES['photo2']['name'])) {
+        if (!empty($_FILES['photo2']['name'])) {
+            $tmp_name = $_FILES['photo2']['tmp_name'];
+            $path = $_FILES['photo2']['name'];
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $file_type = finfo_file($finfo, $tmp_name);
+            if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
+                $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
+            }
+            switch ($file_type) {
+                case "image/jpeg":
+                    $path = uniqid() . ".jpg";
+                    break;
+                case "image/png":
+                    $path = uniqid() . ".png";
+                    break;
+            }
+            move_uploaded_file($tmp_name, 'img/' . $path);
+            $lot['path'] = $path;
+        }
+        //$errors['file'] = 'Вы не загрузили файл';
     }
 
     if (count($errors)) {
