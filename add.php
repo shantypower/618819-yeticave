@@ -8,7 +8,7 @@ $categories = [];
 $page_content = '';
 $categories = getAllCategories($link);
 
-if ($user_data['is_auth'] == 0) {
+if (!isset($_SESSION['id']) && $user_data['is_auth'] === 0) {
     $page_content = includeTemplate('error.php', ['error' => '<h2>403 Доступ запрещен</h2><p>Добавлять лот могут только зарегистрированные пользователи</p>']);
     print(showContent($categories, $page_content, $user_data, $search, '403 Доступ запрещен'));
     exit();
@@ -48,16 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-    if ((!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
+
+    if (isset($_POST['category']) && (!is_numeric($_POST['category']))||($_POST['category'] <= 0)) {
         $errors['category'] = 'Выберите категорию';
     }
-    if ((!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
+    if (isset($_POST['lot-rate']) && (!is_numeric($_POST['lot-rate']))||($_POST['lot-rate'] <= 0)) {
         $errors['lot-rate'] = 'Введите число больше ноля';
     }
-    if ((!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
+    if (isset($_POST['lot-step']) && (!is_numeric($_POST['lot-step']))||($_POST['lot-step'] <= 0)) {
         $errors['lot-step'] = 'Введите число больше ноля';
     }
-    if (!empty($_POST['lot-date']) && !checkRemainTime($_POST['lot-date'])) {
+    if (isset($_POST['lot-date']) && !empty($_POST['lot-date']) && !checkRemainTime($_POST['lot-date'])) {
         $errors['lot-date'] = 'Неверная дата: нельзя закрыть лот менее чем через сутки после добавления';
     }
 

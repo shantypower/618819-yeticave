@@ -62,11 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $user['path'] = $path;
                 }
             }
-        }/*  else {
-            $errors['file'] = 'Вы не загрузили файл';
         }
-    } else {
-        $errors['file'] = 'Вы не загрузили файл'; */
+
         $user['path'] = '';
     }
     if (empty($errors)) {

@@ -17,7 +17,7 @@
                     </div>
                     <?php if ($item['date_end'] > date("Y-m-d H:i:s")): ?>
                     <div class="lot__timer timer"><?=LotLifetime()?></div>
-                    <? endif;?>
+                    <?php endif;?>
                 </div>
             </div>
         </li>

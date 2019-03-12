@@ -166,7 +166,7 @@ function showPaginationSiteSearch($link, $search, $top_menu)
     $page_items = 9;
     $offset = ($current_page - 1) * $page_items;
 
-    $items_count = getCountOfLotsBySearch($link, $search, $page_items, $offset);
+    $items_count = getCountOfLotsBySearch($link, $search);
     $pages_count = ceil($items_count / $page_items);
     $pages = range(1, $pages_count);
 
@@ -419,14 +419,13 @@ function getCountOfLotsByCat($link, $search)
 * @param integer $offset Смещение выборки
 * @return integer целое число при наличии лотов, удовлетворяющим условиям поиска иначе null
 */
-function getCountOfLotsBySearch($link, $search, $page_items, $offset)
+function getCountOfLotsBySearch($link, $search)
 {
     $sql= "SELECT COUNT(*)
                AS cnt
              FROM lots l
-            WHERE MATCH(l.lot_name, l.descr) AGAINST(?)
-            LIMIT ? OFFSET ?;";
-    $stmt = db_get_prepare_stmt($link, $sql, [$search, $page_items, $offset]);
+            WHERE MATCH(l.lot_name, l.descr) AGAINST(?)";
+    $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
