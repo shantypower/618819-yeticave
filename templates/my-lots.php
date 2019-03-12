@@ -26,9 +26,9 @@
               <img src="<?=textClean($item['img_src'])?>" width="54" height="40" alt="">
             </div>
             <div>
-              <h3 class="rates__title"><a href="lot.php?id=<?=$item['lot_id']?>"><?=$item['lot_name']?></a></h3>
-              <p><?=$item['contacts']?></p>
-              <p><?=$item['email']?></p>
+              <h3 class="rates__title"><a href="lot.php?id=<?=$item['lot_id']?>"><?=textClean($item['lot_name'])?></a></h3>
+              <p><?=textClean($item['contacts'])?></p>
+              <p><?=textClean($item['email'])?></p>
             </div>
           </td>
           <td class="rates__category">

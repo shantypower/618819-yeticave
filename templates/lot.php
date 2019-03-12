@@ -40,7 +40,7 @@
                 <table class="history__list">
                     <?php foreach ($rates as $item): ?>
                         <tr class="history__item">
-                            <td class="history__name"><?=$item['user_name'] ?></td>
+                            <td class="history__name"><?=textClean($item['user_name']) ?></td>
                             <td class="history__price"><?=textClean($item['rate'])?></td>
                             <td class="history__time"><?=textClean(humanDate($item['date_add'])) ?></td>
                         </tr>

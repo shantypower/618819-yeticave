@@ -15,10 +15,10 @@ if ($isConnect == false) {
 
 $win_lots = getWonLots($link);
 
-if (!$win_lots) {
+/* if (!$win_lots) {
     print(showError($categories, $page_content, $user_data, $search, '<h2>Победитель не найден</h2>'));
     return;
-}
+} */
 foreach ($win_lots as $item) {
     $id = $item['id'];
     $lot_name = $item['lot_name'];

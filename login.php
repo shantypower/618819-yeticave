@@ -24,21 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($required as $key) {
         if (empty($form[$key])) {
             $errors[$key] = 'Это поле надо заполнить';
-        }
-    }
-    if (filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
-        $errors['email'] = 'Введите корректный e-mail';
-    }
-    $user = getUserByEmail($form['email'], $link);
-    if (!count($errors) && $user) {
-        if (password_verify($form['password'], $user['user_pass'])) {
-            $_SESSION['id'] = $user['id'];
         } else {
-            $errors['password'] = 'Вы ввели неверный пароль';
+            if (filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
+                $errors['email'] = 'Введите корректный e-mail';
+            } else {
+                $user = getUserByEmail($form['email'], $link);
+            if (!count($errors) && $user) {
+                if (password_verify($form['password'], $user['user_pass'])) {
+                    $_SESSION['id'] = $user['id'];
+                } else {
+                    $errors['password'] = 'Вы ввели неверный пароль';
+                }
+            } else {
+                $errors['email'] = 'Пользователь с таким e-mail не найден';
+            }
+            }
         }
-    } else {
-        $errors['email'] = 'Пользователь с таким e-mail не найден';
     }
+
     if (count($errors)) {
         $page_content = includeTemplate('login.php', ['top_menu' => $menu, 'form' => $form, 'errors' => $errors]);
         print(showContent($categories, $page_content, $user_data, $search, 'Ошибка входа'));

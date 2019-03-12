@@ -23,7 +23,13 @@ if (!$categories) {
 };
 
 $top_menu = includeTemplate('menu.php', ['menu' => $categories]);
+var_dump($_GET['category']);
+/* if (!isset($_GET['category'])) {
+    print(showError($categories, $page_content, $user_data, $search, '<h2>404 Страница не найдена</h2><p>Данной страницы не существует на сайте.</p>'));
+    return;
+} */
 $cat = $_GET['category'];
+
 $page_content = showPaginationCatSearch($link, $cat, $top_menu);
 if (!$page_content) {
     print(showError($categories, $page_content, $user_data, $cat, '<h2>Нет товаров в выбранной категории</h2>'));
