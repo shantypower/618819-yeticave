@@ -8,3 +8,4 @@ if (isset($_SESSION['id'])) {
     $user_data = getUserByID($_SESSION['id'], $link);
     $user_data['is_auth'] = 1;
 }
+
