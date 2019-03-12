@@ -19,7 +19,6 @@ foreach ($win_lots as $item) {
     $id = $item['id'];
     $lot_name = $item['lot_name'];
     $rate_winner = getRateWinner($link, $id);
-    var_dump($rate_winner);
     $winner = $rate_winner['user_id'];
     $sql= "UPDATE lots
               SET winner_id = '$winner'
