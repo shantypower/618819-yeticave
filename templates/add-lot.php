@@ -19,7 +19,7 @@
           <select id="category" name="category" >
             <option>Выберите категорию</option>
             <?php foreach ($categories as $item): ?>
-                <option value="<?=$item['id'];?>" <?php $sel = ($value == $item['id']) ? 'selected' : "";?> <?=$sel; ?>><?=$item['cat_name'];?></option>
+                <option value="<?=$item['id'];?>" <?php $sel = ($value === $item['id']) ? 'selected' : "";?> <?=$sel; ?>><?=$item['cat_name'];?></option>
             <?php endforeach;?>
           </select>
           <span class="form__error"><?=$error;?></span>

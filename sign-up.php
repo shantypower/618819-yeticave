@@ -10,13 +10,13 @@ $errors = [];
 $dict = [];
 $search = '';
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST;
 
     $required = [
@@ -38,34 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) == false) {
+    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === false) {
         $errors['email'] = 'Введите корректный e-mail';
     }
-    if (isset($_FILES['photo2']['name'])) {
-        if (!empty($_FILES['photo2']['name'])) {
-            $tmp_name = $_FILES['photo2']['tmp_name'];
-            $path = $_FILES['photo2']['name'];
+    if (isset($_FILES['photo2']['name']) && (!empty($_FILES['photo2']['name']))) {
+        $tmp_name = $_FILES['photo2']['tmp_name'];
+        $path = $_FILES['photo2']['name'];
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-            if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
-                $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
-            } else {
-                if ($file_type == "image/jpeg") {
-                    $path = uniqid() . ".jpg";
-                }
-                if ($file_type == "image/png") {
-                    $path = uniqid() . ".png";
-                }
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
+            $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
+        } else {
+            $path = setPathName($file_type);
+            if ($path) {
                 move_uploaded_file($tmp_name, 'img/' . $path);
-                if (isset($user['path'])) {
-                    $user['path'] = $path;
-                }
+            }
+            if (isset($user['path'])) {
+                $user['path'] = $path;
             }
         }
-
-        $user['path'] = '';
     }
+    $user['path'] = '';
+
     if (empty($errors)) {
         $res = getUserByEmail($user['email'], $link);
         if (count($res) > 0) {

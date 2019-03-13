@@ -476,7 +476,7 @@ function humanDate($time)
 
     $days = floor($secs_passed / 86400);
 
-    if ($days == 0) {
+    if ($days === 0) {
         $hours = floor($secs_passed / 3600);
         if ($hours > 0) {
             $result = $hours . ' ' . plural($hours, 'час', 'часа', 'часов' );
@@ -505,7 +505,7 @@ function humanDate($time)
 function plural($number, $one, $two, $five)
 {
 	if (($number - $number % 10) % 100 != 10) {
-		if ($number % 10 == 1) {
+		if ($number % 10 === 1) {
 			$result = $one;
 		} elseif ($number % 10 >= 2 && $number % 10 <= 4) {
 			$result = $two;

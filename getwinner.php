@@ -7,7 +7,7 @@ $mailer = new Swift_Mailer($transport);
 $logger = new Swift_Plugins_Loggers_ArrayLogger();
 $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;

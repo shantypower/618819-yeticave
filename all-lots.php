@@ -9,7 +9,7 @@ $categories = [];
 $lots = [];
 $page_content = '';
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;

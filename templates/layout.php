@@ -23,7 +23,7 @@
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
         <nav class="user-menu">
-            <?php if ($user_data['is_auth'] == 0): ?>
+            <?php if ($user_data['is_auth'] === 0): ?>
             <ul class="user-menu__list">
                 <li class="user-menu__item">
                     <a href="sign-up.php">Регистрация</a>

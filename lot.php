@@ -13,7 +13,7 @@ $search = '';
 $page_content = '';
 $current_price = 0;
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;
@@ -32,7 +32,7 @@ if (!$lot) {
 
 $current_price = $lot['MAX(lr.rate)'] ? $lot['MAX(lr.rate)'] : $lot['start_price'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rate = $_POST;
     $required = ['cost'];
     $dict = ['cost' => 'Сумма ставки'];

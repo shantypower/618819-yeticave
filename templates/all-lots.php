@@ -31,7 +31,7 @@ $href_next = ($current_page+1 <= count($pages)) ? "all-lots.php?category=".$cat.
 <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev"><a href=<?=$href_prev;?>>Назад</a></li>
     <?php foreach ($pages as $page): ?>
-        <li class="pagination__item <?php if ($page == $current_page): ?>pagination__item--active<?php endif; ?>">
+        <li class="pagination__item <?php if ($page === $current_page): ?>pagination__item--active<?php endif; ?>">
             <a href="all-lots.php?category=<?=$cat.'&page='.$page;?>"><?=$page;?></a>
         </li>
     <?php endforeach; ?>
