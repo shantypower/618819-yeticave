@@ -4,6 +4,7 @@ include('core/session.php');
 require('core/data.php');
 require_once('core/functions.php');
 require('core/db_connection.php');
+include('getwinner.php');
 $page_content = '';
 $categories =  [];
 $adverts = [];
@@ -36,5 +37,4 @@ $page_content = includeTemplate('index.php', [
     'categories' => $categories,
     'adverts' => $adverts,
 ]);
-require_once('getwinner.php');
 print(showContent($categories, $page_content, $user_data, $search, 'YetiCave - Главная страница'));
