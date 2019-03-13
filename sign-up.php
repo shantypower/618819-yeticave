@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[$key] = 'Это поле надо заполнить';
         }
     }
-    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === false) {
+    if (!empty($_POST['email']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === false) {
         $errors['email'] = 'Введите корректный e-mail';
     }
     if (isset($_FILES['photo2']['name']) && (!empty($_FILES['photo2']['name']))) {
@@ -49,38 +49,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_type = finfo_file($finfo, $tmp_name);
         if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
             $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
-        } else {
-            $path = setPathName($file_type);
-            if ($path) {
-                move_uploaded_file($tmp_name, 'img/' . $path);
-            }
-            if (isset($user['path'])) {
-                $user['path'] = $path;
-            }
         }
+        $path = setPathName($file_type);
+        if ($path) {
+            move_uploaded_file($tmp_name, 'img/' . $path);
+        }
+        $user['path'] = $path;
     }
     $user['path'] = '';
 
-    if (empty($errors)) {
-        $res = getUserByEmail($user['email'], $link);
-        if (count($res) > 0) {
-            $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
-        } else {
-            $password = password_hash($user['password'], PASSWORD_DEFAULT);
+    if (empty($errors) && (count(getUserByEmail($user['email'], $link)) > 0)) {
+        $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
+    } else {
+        $password = password_hash($user['password'], PASSWORD_DEFAULT);
 
-            $sql = "INSERT INTO users (reg_date, email, user_pass, user_name, avatar_src, contacts)
-                    VALUES (NOW(), ?, ?, ?, ?, ?);";
-            $stmt = db_get_prepare_stmt($link, $sql, [$user['email'], $password, $user['name'], 'img/' . $user['path'],  $user['message']]);
-            $res = mysqli_stmt_execute($stmt);
-            if ($res && empty($errors)) {
-                header("Location: login.php");
-                exit();
-            } else {
-                $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
-            }
+        $sql = "INSERT INTO users (reg_date, email, user_pass, user_name, avatar_src, contacts)
+                VALUES (NOW(), ?, ?, ?, ?, ?);";
+        $stmt = db_get_prepare_stmt($link, $sql, [$user['email'], $password, $user['name'], 'img/' . $user['path'],  $user['message']]);
+        $res = mysqli_stmt_execute($stmt);
+        if ($res && empty($errors)) {
+            header("Location: login.php");
+            exit();
+        } else {
+            $page_content = includeTemplate('error.php', ['error' => mysqli_error($link)]);
         }
     }
 }
+
 $user['path'] = '';
 $menu = includeTemplate('menu.php', ['menu' => $categories]);
 $page_content = includeTemplate(
