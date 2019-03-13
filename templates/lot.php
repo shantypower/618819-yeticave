@@ -12,7 +12,7 @@
         <div class="lot-item__right">
             <div class="lot-item__state">
                 <?php if ($lot['date_end'] > date("Y-m-d H:i:s")): ?>
-                    <div class="lot-item__timer timer"><?=LotLifetime();?></div>
+                    <div class="lot-item__timer timer"><?=LotLifetime($lot['date_end']);?></div>
                 <?php endif; ?>
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">

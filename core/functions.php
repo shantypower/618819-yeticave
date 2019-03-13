@@ -51,15 +51,18 @@ function textClean($str)
 }
 
 /**
-* Возвращает сколько часов и минут осталось до окончания жизни лота (в данном случае до полуночи текущего дня)
+* Возвращает сколько часов и минут осталось до окончания жизни лота
 * @return string Результат в виде строки
 */
-function LotLifetime()
+function LotLifetime($date_end)
 {
-    $future_time = date_create('midnight tomorrow');
-    $current_time = date_create('now');
-    $diff = date_diff($current_time, $future_time);
-    return date_interval_format($diff, "%H:%I");
+    $future_time = strtotime($date_end);
+    $current_time = strtotime('now');
+    $secs_less = $future_time - $current_time;
+
+    $hours = floor($secs_less / 3600);
+    $minutes = ceil($secs_less / 60) % 60;
+    return $result = $hours . ' : ' . $minutes;
 }
 
 /**
@@ -97,14 +100,14 @@ function getAllCategories($link)
 */
 function getAllLots($link)
 {
-    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, l.price_step, MAX(lr.rate), c.cat_name
+    $sql = 'SELECT l.id, l.lot_name, l.start_price, l.img_src, l.price_step, MAX(lr.rate), c.cat_name, l.date_end
     FROM lots l
     JOIN categories c
       ON l.cat_id = c.id
     LEFT OUTER JOIN lot_rates lr
       ON l.id = lr.lot_id
    WHERE l.date_end > CURRENT_DATE()
-   GROUP BY l.id, l.lot_name, l.start_price, l.img_src, c.cat_name
+   GROUP BY l.id, l.lot_name, l.start_price, l.img_src, c.cat_name, l.date_end
    ORDER BY l.date_add
     DESC LIMIT 6;';
     $adverts = db_fetch_data($link, $sql, $adverts = []);

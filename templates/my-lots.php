@@ -8,7 +8,7 @@
                 $contacts="";
           if (checkRemainTime($item['date_end'])) {
               $classname_item = "";
-              $value = LotLifetime();
+              $value = LotLifetime($item['date_end']);
               $classname_timer = "timer--finishing";
           } else if (($user_id === $item['winner_id'])) {
               $classname_item = "rates__item--win";

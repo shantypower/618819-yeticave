@@ -30,7 +30,7 @@
                         <span class="lot__amount"><?=priceFormat(textClean($item['MAX(lr.rate)'] + $item['start_price'])).' &#8381;'?></span>
                         <span class="lot__cost"><?=priceFormat(textClean($item['MAX(lr.rate)'] + $item['start_price'] + $item['price_step']))?><b class="rub">р</b></span>
                     </div>
-                    <div class="lot__timer timer"><?=LotLifetime()?></div>
+                    <div class="lot__timer timer"><?=LotLifetime($item['date_end'])?></div>
                 </div>
             </div>
         </li>
