@@ -14,7 +14,7 @@ if ($user_data['is_auth'] === 0) {
     exit();
 }
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;
@@ -22,7 +22,7 @@ if ($isConnect == false) {
 
 $top_menu = includeTemplate('menu.php', ['menu' => $categories]);
 $page_content = includeTemplate('add-lot.php', ['top_menu' => $top_menu, 'categories' => $categories]);
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lot = $_POST;
 
     $required = [
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
             $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
         }
-        $path = setPathName($file_type);
+        $path = makeFilename($file_type);
         if ($path) {
             move_uploaded_file($tmp_name, 'img/' . $path);
             $lot['path'] = $path;

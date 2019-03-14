@@ -16,7 +16,7 @@
                         <span class="lot__cost"><?=priceFormat(textClean($item['MAX(lr.rate)'] + $item['start_price'] + $item['price_step']))?><b class="rub">р</b></span>
                     </div>
                     <?php if ($item['date_end'] > date("Y-m-d H:i:s")): ?>
-                    <div class="lot__timer timer"><?=LotLifetime()?></div>
+                    <div class="lot__timer timer"><?=LotLifetime($item['date_end'])?></div>
                     <?php endif;?>
                 </div>
             </div>
@@ -31,7 +31,7 @@ $href_next = ($current_page+1 <= count($pages)) ? "all-lots.php?category=".$cat.
 <ul class="pagination-list">
     <li class="pagination-item pagination-item-prev"><a href=<?=$href_prev;?>>Назад</a></li>
     <?php foreach ($pages as $page): ?>
-        <li class="pagination__item <?php if ($page == $current_page): ?>pagination__item--active<?php endif; ?>">
+        <li class="pagination__item <?php if ((int) $page === (int) $current_page): ?>pagination__item--active<?php endif; ?>">
             <a href="all-lots.php?category=<?=$cat.'&page='.$page;?>"><?=$page;?></a>
         </li>
     <?php endforeach; ?>

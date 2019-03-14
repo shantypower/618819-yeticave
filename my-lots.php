@@ -14,7 +14,7 @@ $page_content = '';
 $current_price = 0;
 $user_id = $user_data['id'];
 
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;
