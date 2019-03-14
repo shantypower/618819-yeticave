@@ -5,7 +5,7 @@ require_once('core/functions.php');
 $categories = getAllCategories($link);
 $user_data['is_auth'] = 0;
 $user = [];
-
+$user['path'] = '';
 $errors = [];
 $dict = [];
 $search = '';
