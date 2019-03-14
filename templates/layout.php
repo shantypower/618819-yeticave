@@ -12,7 +12,7 @@
 <header class="main-header">
     <div class="main-header__container container">
         <h1 class="visually-hidden">YetiCave</h1>
-        <a class="main-header__logo">
+        <a class="main-header__logo" href="/">
             <img src="img/logo.svg" width="160" height="39" alt="Логотип компании YetiCave">
         </a>
         <form class="main-header__search" method="get" action="search.php">
@@ -23,7 +23,7 @@
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
 
         <nav class="user-menu">
-            <?php if ($user_data['is_auth'] == 0): ?>
+            <?php if ($user_data['is_auth'] === 0): ?>
             <ul class="user-menu__list">
                 <li class="user-menu__item">
                     <a href="sign-up.php">Регистрация</a>

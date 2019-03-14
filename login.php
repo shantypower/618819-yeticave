@@ -7,13 +7,13 @@ $categories = getAllCategories($link);
 $adverts = getAllLots($link);
 $errors = [];
 $search = '';
-if ($isConnect == false) {
+if ($isConnect === false) {
     $error = mysqli_connect_error();
     print(showError($categories, $page_content, $user_data, $search, $error));
     return;
 }
 $menu = includeTemplate('menu.php', ['menu' => $categories]);
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form = $_POST;
 
     $required = [
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    if (!empty($form['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) == false) {
+    if (!empty($form['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) === false) {
         $errors['email'] = 'Введите корректный e-mail';
     }
 
