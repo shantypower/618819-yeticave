@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <?php if ($user_data['is_auth'] === 1 && ($user_data['id'] !== $lot['author_id']) && ($lot['date_end'] > date("Y-m-d H:i:s")) && !$isRate): ?>
+            <?php if ($user_data['is_auth'] === 1 && ((int) $user_data['id'] !== (int) $lot['author_id']) && ($lot['date_end'] > date("Y-m-d H:i:s")) && !$isRate): ?>
             <form class="lot-item__form" action="lot.php?id=<?=$lot['id'];?>" method="post">
                 <?php $classname = isset($errors['cost']) ? "form__item--invalid" : "";
                 $value = isset($lot['cost']) ? $lot['cost'] : "";

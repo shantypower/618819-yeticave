@@ -352,17 +352,15 @@ function checkIsCategoryExist($link, $id)
 * @param string $file_type тип файла
 * @return string Результат в виде строки
 */
-function setPathName($file_type)
+function makeFilename($file_type)
 {
     switch ($file_type) {
         case "image/jpeg":
             $path = uniqid() . ".jpg";
             return $path;
-            break;
         case "image/png":
             $path = uniqid() . ".png";
             return $path;
-            break;
     }
 }
 

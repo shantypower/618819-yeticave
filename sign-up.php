@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (($file_type !== "image/jpeg") && ($file_type !== "image/png")) {
             $errors['file'] = 'Загрузите картинку в формате PNG или JPG';
         }
-        $path = setPathName($file_type);
+        $path = makeFilename($file_type);
         if ($path) {
             move_uploaded_file($tmp_name, 'img/' . $path);
         }
@@ -76,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$user['path'] = '';
 $menu = includeTemplate('menu.php', ['menu' => $categories]);
 $page_content = includeTemplate(
     'sign-up.php',

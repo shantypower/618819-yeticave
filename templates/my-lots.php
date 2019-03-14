@@ -10,7 +10,7 @@
               $classname_item = "";
               $value = LotLifetime($item['date_end']);
               $classname_timer = "timer--finishing";
-          } else if (($user_id === $item['winner_id'])) {
+          } else if ((int) $user_id === (int) $item['winner_id']) {
               $classname_item = "rates__item--win";
               $value = "Ставка победила";
               $classname_timer = "timer--win";
