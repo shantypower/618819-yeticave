@@ -18,6 +18,7 @@ if ($isConnect === false) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $_POST;
+    $user['path'] = '';
 
     $required = [
         'email',
@@ -56,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $user['path'] = $path;
     }
-    $user['path'] = '';
 
     if (empty($errors) && (count(getUserByEmail($user['email'], $link)) > 0)) {
         $errors['email'] = 'Пользователь с этим email уже зарегистрирован';
